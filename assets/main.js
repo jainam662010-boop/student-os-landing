@@ -166,7 +166,32 @@ function mountScreens(root) {
 
 /* ────────────────────────────────────────────────────────────
    2. STABLE THREE.JS TORUS KNOT  (app FocusBrainCanvas mirror)
+   Perf: lazy CDN load (only pages with a 3D host), FPS-capped
+   render loop, low-end device degrades, context-loss recovery
 ──────────────────────────────────────────────────────────── */
+var LOW = (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+          (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+var sosScrollT = 0; /* last scroll timestamp — WebGL yields while scrolling */
+
+var THREE_CDNS = [
+  'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js',
+  'https://unpkg.com/three@0.150.1/build/three.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.150.1/three.min.js'
+];
+function ensureThree(cb) {
+  if (typeof THREE !== 'undefined') { cb(); return; }
+  var i = 0;
+  (function next() {
+    if (i >= THREE_CDNS.length) return; /* no 3D rather than a broken page */
+    var s = document.createElement('script');
+    s.src = THREE_CDNS[i++];
+    s.async = true;
+    s.onload = function () { if (typeof THREE !== 'undefined') cb(); else next(); };
+    s.onerror = function () { s.remove(); next(); };
+    document.head.appendChild(s);
+  })();
+}
+
 function initTorusHost(host, opts) {
   if (!host || typeof THREE === 'undefined' || RED) return;
   if (host.dataset.torusReady) return;
@@ -178,7 +203,7 @@ function initTorusHost(host, opts) {
     var camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'low-power' });
     renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setPixelRatio(LOW ? 1 : Math.min(window.devicePixelRatio || 1, 1.35));
     host.appendChild(renderer.domElement);
     var geometry = new THREE.TorusKnotGeometry(1.5, 0.4, 96, 18);
     var material = new THREE.MeshPhongMaterial({
@@ -186,20 +211,82 @@ function initTorusHost(host, opts) {
       transparent: true, opacity: opts2.opacity != null ? opts2.opacity : 0.8, wireframe: true
     });
     var mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    var grp = new THREE.Group();
+    grp.add(mesh);
+    scene.add(grp);
+
+    /* twinkling particle field around the knot (skipped on low-end devices) */
+    if (opts2.particles && !LOW) {
+      var N = opts2.particles === true ? 240 : opts2.particles;
+      var pos = new Float32Array(N * 3);
+      for (var pi = 0; pi < N; pi++) {
+        var th = Math.random() * Math.PI * 2, ph2 = Math.acos(2 * Math.random() - 1);
+        var rr = 3.2 + Math.random() * 3.4;
+        pos[pi * 3] = rr * Math.sin(ph2) * Math.cos(th);
+        pos[pi * 3 + 1] = rr * Math.sin(ph2) * Math.sin(th) * 0.8;
+        pos[pi * 3 + 2] = rr * Math.cos(ph2);
+      }
+      var pgeo = new THREE.BufferGeometry();
+      pgeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      var pmat = new THREE.PointsMaterial({ color: 0xc4b5fd, size: 0.07, transparent: true, opacity: 0.65, sizeAttenuation: true });
+      var pts = new THREE.Points(pgeo, pmat);
+      grp.add(pts);
+      pts.userData.spin = 0.0016 * (opts2.speed / 0.005);
+    }
+
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     var pl = new THREE.PointLight(0x7c4dff, 2);
     pl.position.set(5, 5, 5); scene.add(pl);
     camera.position.z = opts2.zoom || 5;
 
+    /* drag + pointer parallax (opt-in via "interact") */
+    var boosted = 0, drag = { on: false, x: 0, y: 0, vy: 0, vx: 0 }, hover = { tx: 0, ty: 0, x: 0, y: 0 };
+    if (opts2.interact && host.id === 'knotHost') {
+      host.addEventListener('pointerdown', function (e) { drag.on = true; drag.x = e.clientX; drag.y = e.clientY; });
+      window.addEventListener('pointerup', function () { drag.on = false; });
+      window.addEventListener('pointermove', function (e) {
+        if (drag.on) {
+          drag.vy = (e.clientX - drag.x) * 0.005; drag.vx = (e.clientY - drag.y) * 0.003;
+          drag.x = e.clientX; drag.y = e.clientY;
+        }
+      }, { passive: true });
+      host.addEventListener('pointermove', function (e) {
+        var r = host.getBoundingClientRect();
+        hover.tx = ((e.clientX - r.left) / r.width - .5) * 0.35;
+        hover.ty = ((e.clientY - r.top) / r.height - .5) * 0.25;
+      }, { passive: true });
+      /* pulse on session-preset change (dispatched by the timer) */
+      document.addEventListener('sos-knot-pulse', function () {
+        boosted = 1;
+        host.classList.add('knot-boost');
+        setTimeout(function () { boosted = 0; host.classList.remove('knot-boost'); }, 1600);
+      });
+    }
+
     var raf = 0, pageVisible = document.visibilityState === 'visible', inView = true;
     var speed = opts2.speed || 0.005;
+    var MIN_DT = 1000 / (LOW ? 24 : 38); /* cap render fps — saves battery & GPU */
+    var lastT = 0, dead = false;
+    renderer.domElement.addEventListener('webglcontextlost', function (ev) {
+      ev.preventDefault(); dead = true; cancelAnimationFrame(raf);
+    });
     function frame(t) {
       raf = requestAnimationFrame(frame);
-      if (!pageVisible || !inView) return;
-      mesh.rotation.x += speed;
-      mesh.rotation.y += speed;
-      var s = (opts2.breath === false ? 1 : 1 + Math.sin(t * 0.001) * 0.1) * (opts2.scale || 1);
+      if (dead || !pageVisible || !inView) return;
+      if (t - lastT < MIN_DT) return;
+      if (performance.now() - sosScrollT < 220) { lastT = t; return; } /* yield to scrolling */
+      lastT = t;
+      var env = 1 + boosted * 1.6;
+      mesh.rotation.x += speed * env;
+      mesh.rotation.y += speed * env;
+      hover.x += (hover.tx - hover.x) * 0.05;
+      hover.y += (hover.ty - hover.y) * 0.05;
+      grp.rotation.y += (drag.vy + hover.x * 0.06) * (drag.on ? 1 : 0.4);
+      grp.rotation.x += (drag.vx + hover.y * 0.06) * (drag.on ? 1 : 0.4);
+      drag.vy *= 0.94; drag.vx *= 0.94; /* inertia */
+      boosted *= 0.965; if (boosted < 0.02) boosted = 0; /* eased decay, no flicker */
+      grp.children.forEach(function (c) { if (c.userData && c.userData.spin) c.rotation.y += c.userData.spin; });
+      var s = (opts2.breath === false ? 1 : 1 + Math.sin(t * 0.001) * 0.1 + boosted * Math.sin(t * 0.004) * 0.03) * (opts2.scale || 1);
       mesh.scale.set(s, s, s);
       renderer.render(scene, camera);
     }
@@ -267,7 +354,7 @@ function initWipe() {
       if (target === window.location.pathname.split('/').pop()) return;
       ev.preventDefault();
       wipe.classList.add('cover', 'wipe-shift');
-      setTimeout(function () { window.location.href = href; }, 420);
+      setTimeout(function () { window.location.href = href; }, 280);
     });
   });
 }
@@ -276,48 +363,36 @@ function initWipe() {
    4. SCROLL ENGINE — nav, progress, reveals, counters,
       3D scenes, ring, scenes map (one central loop)
 ──────────────────────────────────────────────────────────── */
-var sceneEls = [], ringEl = null, ringRange = 1;
-function measureScenes() {
-  sceneEls = $$('.scene3d').map(function (el) { return { el: el, t: 0, c: 0, prev: -9 }; });
-}
-function updateScenes(scrollY) {
+/* ────────────────────────────────────────────────────────────
+   4. SCROLL ENGINE — progress bar + ring (CSS scroll-timeline
+   when supported → compositor-only, zero main-thread work).
+   Scene tilt removed: JS style writes during scroll caused
+   visible jitter/vibration on slower machines.
+──────────────────────────────────────────────────────────── */
+var USE_CSS_RING = (function () {
+  try { return !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: scroll()')); } catch (e) { return false; }
+})();
+var ringEl = null, ringRange = 1, ringPrev = -9e9;
+function updateScenes() {
+  if (!ringEl || USE_CSS_RING) return;
   var vh = window.innerHeight;
-  sceneEls.forEach(function (s) {
-    var r = s.el.getBoundingClientRect();
-    if (r.bottom < -vh || r.top > vh * 2) return;
-    var p = ((r.top + r.height / 2) - vh / 2) / (vh / 2 + r.height / 2);
-    s.t = Math.max(-1, Math.min(1, p));
-  });
-  var ring = ringEl;
-  if (ring) {
-    var sec = ring.closest('.gallery-3d');
-    if (sec) {
-      var r2 = sec.getBoundingClientRect();
-      var total = r2.height - vh;
-      var p2 = total > 0 ? Math.max(0, Math.min(1, -r2.top / total)) : 0;
-      ringRange = p2;
-    }
+  var sec = ringEl.closest('.gallery-3d');
+  if (sec) {
+    var r2 = sec.getBoundingClientRect();
+    var total = r2.height - vh;
+    ringRange = total > 0 ? Math.max(0, Math.min(1, -r2.top / total)) : 0;
   }
 }
 function renderScenes() {
-  sceneEls.forEach(function (s) {
-    s.c += (s.t - s.c) * 0.12;
-    var p = s.c;
-    /* write style only when the interpolated value still moves — no churn when idle */
-    if (Math.abs(p - s.prev) > 0.0008) {
-      s.prev = p;
-      s.el.style.transform = 'perspective(1200px) rotateY(' + (p * -30) + 'deg) rotateX(' + (p * 9) + 'deg) translateZ(' + (-Math.abs(p) * 220) + 'px) scale(' + (1 - Math.abs(p) * 0.22) + ')';
-      s.el.style.opacity = Math.max(0, 1 - Math.abs(p) * 0.95);
-    }
-  });
-  if (ringEl && !RED) {
-    ringEl.style.transform = 'rotateY(' + (-18 - ringRange * 300) + 'deg)';
-  }
+  if (!ringEl || USE_CSS_RING || RED) return;
+  var rr = -18 - ringRange * 220;
+  if (Math.abs(rr - ringPrev) > 0.06) { ringPrev = rr; ringEl.style.transform = 'rotateY(' + rr + 'deg)'; }
 }
 var ticking = false;
 function onScrollAll() {
   if (!ticking) {
     ticking = true;
+    sosScrollT = performance.now();
     requestAnimationFrame(function () {
       var y = window.scrollY || 0;
       var topnav = $('#topnav');
@@ -374,7 +449,7 @@ function initReveals() {
    5. CURSOR · TILT · SPOTLIGHT · MAGNETIC
 ──────────────────────────────────────────────────────────── */
 function initCursor() {
-  if (RED || !FINE) return;
+  if (RED || !FINE || LOW) return;
   var glow = $('#cursorGlow'), ring = $('#cursorRing');
   if (!glow || !ring) return;
   var st = { tx: -999, ty: -999, cx: -999, cy: -999, rx: -999, ry: -999 };
@@ -473,14 +548,16 @@ function initDemo() {
       $$('.preset').forEach(function (x) { x.classList.remove('on'); });
       p.classList.add('on');
       var mins = parseInt(p.getAttribute('data-mins') || '25', 10);
-      curSec = mins * 60; // the ticking loop reads this single source of truth
+      totalSec = curSec = mins * 60; // the ticking loop reads this single source of truth
       updateTimerLabel();
+      try { document.dispatchEvent(new CustomEvent('sos-knot-pulse')); } catch (e) {}
     });
   });
   /* ONE timer state shared by presets + ticking — no competing intervals */
   var bigTimer = $('#focusTimerBig');
   var miniTimer = $('#miniTimer');
-  var curSec = 25 * 60;
+  var sessionProg = $('#sessionProg');
+  var curSec = 25 * 60, totalSec = 25 * 60;
   function updateTimerLabel() {
     var m = Math.floor(curSec / 60), s = curSec % 60;
     var label = (m >= 60
@@ -488,11 +565,15 @@ function initDemo() {
       : String(m).padStart(2, '0')) + ':' + String(s).padStart(2, '0');
     if (bigTimer) bigTimer.textContent = label;
     if (miniTimer) miniTimer.textContent = label;
+    if (sessionProg && totalSec > 0) {
+      /* fill the knot's ring as the session elapses */
+      sessionProg.style.strokeDashoffset = String(Math.max(0, 1 - (totalSec - curSec) / totalSec));
+    }
   }
   if ((bigTimer || miniTimer) && !RED) {
     updateTimerLabel();
     setInterval(function () {
-      curSec--; if (curSec < 0) curSec = 25 * 60;
+      curSec--; if (curSec < 0) { curSec = totalSec; if (sessionProg) sessionProg.style.strokeDashoffset = '1'; }
       updateTimerLabel();
     }, 1000);
   }
@@ -521,8 +602,189 @@ function markActive() {
   });
 }
 
+/* ────────────────────────────────────────────────────────────
+   8. SPLIT-LINE HEADING REVEALS — words rise line by line
+──────────────────────────────────────────────────────────── */
+function initHeadSplit() {
+  if (RED || !('IntersectionObserver' in window)) return;
+  $$('h2').forEach(function (h2) {
+    if (h2.classList.contains('hl-done') || h2.closest('.vignette')) return;
+    var words = []; var d = 0;
+    Array.prototype.slice.call(h2.childNodes).forEach(function (node) {
+      if (node.nodeType === 3) {
+        node.textContent.split(/(\s+)/).forEach(function (tk) {
+          if (!tk) return;
+          if (/^\s+$/.test(tk)) { words.push(document.createTextNode(' ')); return; }
+          var w = document.createElement('span'); w.className = 'hl-w';
+          var inner = document.createElement('span');
+          inner.style.setProperty('--wd', (d += 55) + 'ms');
+          inner.textContent = tk;
+          w.appendChild(inner);
+          words.push(w);
+        });
+      } else {
+        words.push(node); /* <br>, .grad spans etc. kept as-is */
+      }
+    });
+    h2.classList.add('hl-wrap', 'hl-done');
+    h2.textContent = '';
+    words.forEach(function (w) { h2.appendChild(w); });
+    new IntersectionObserver(function (es, o) {
+      if (es[0].isIntersecting) { h2.classList.add('in-view'); o.disconnect(); }
+    }, { threshold: 0.4 }).observe(h2);
+  });
+  /* hairline separators that draw themselves in */
+  $$('.sect-wave').forEach(function (wv) {
+    new IntersectionObserver(function (es, o) {
+      if (es[0].isIntersecting) { wv.classList.add('in-view'); o.disconnect(); }
+    }, { threshold: 0.6 }).observe(wv);
+  });
+  // nested .grad spans: their text is inside a single child — wrap those too
+  $$('.hl-wrap .grad').forEach(function (g) {
+    if (g.classList.contains('hl-done-g')) return;
+    g.classList.add('hl-done-g');
+    var frag = document.createDocumentFragment();
+    var d = 0, total = 0;
+    g.textContent.split(/(\s+)/).forEach(function (tk) {
+      if (!tk) return;
+      if (/^\s+$/.test(tk)) { frag.appendChild(document.createTextNode(' ')); return; }
+      total++;
+    });
+    var i = 0;
+    g.textContent.split(/(\s+)/).forEach(function (tk) {
+      if (!tk) return;
+      if (/^\s+$/.test(tk)) { frag.appendChild(document.createTextNode(' ')); return; }
+      i++;
+      var w = document.createElement('span'); w.className = 'hl-w';
+      var inner = document.createElement('span');
+      inner.style.setProperty('--wd', (200 + (i / total) * 200) + 'ms');
+      inner.textContent = tk;
+      w.appendChild(inner);
+      frag.appendChild(w ? w : document.createTextNode(tk));
+    });
+    g.textContent = '';
+    g.appendChild(frag);
+  });
+}
+
+/* ────────────────────────────────────────────────────────────
+   9. VIDEO WALKTHROUGH — click-to-player + modal demo reel
+──────────────────────────────────────────────────────────── */
+var VD_STEPS = [
+  { s: 'dashboard', t: 'Everything at a glance — focus, tasks, streaks, week bar' },
+  { s: 'focus',     t: 'Deep Work timer — timestamp-based, zero drift' },
+  { s: 'palette',   t: '⌘K command palette — jump anywhere in a keystroke' },
+  { s: 'tasks',     t: 'Tasks with priorities, subjects and XP rewards' },
+  { s: 'kanban',    t: 'Kanban board for bigger projects' },
+  { s: 'habits',    t: 'Habit grid — daily streaks made visible' },
+  { s: 'month',     t: 'Study planner with exam countdowns' },
+  { s: 'analytics', t: 'Analytics — where your hours actually went' },
+  { s: 'settings',  t: 'Export anytime — all data stays on this device' }
+];
+function initVideo() {
+  if (window.__vdReady) return; window.__vdReady = '1';
+  var iframeFmt = document.querySelector('.video-frame');
+  if (iframeFmt) {
+    new IntersectionObserver(function (es, o) {
+      if (es[0].isIntersecting) { iframeFmt.classList.add('in-view'); o.disconnect(); }
+    }, { threshold: 0.25 }).observe(iframeFmt);
+    iframeFmt.addEventListener('click', openVideoModal);
+    iframeFmt.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVideoModal(); }
+    });
+  }
+
+  function openVideoModal() {
+    if ($('.vd-modal')) { $('.vd-modal').classList.add('open'); return; }
+
+    var modal = document.createElement('div');
+    modal.className = 'vd-modal';
+    modal.innerHTML =
+      '<div class="vd-modal-inner" role="dialog" aria-modal="true" aria-label="App walkthrough">' +
+        '<button class="vd-modal-close" aria-label="Close">✕</button>' +
+        '<div class="vd-modal-stage">' +
+          '<div class="vd-title">Student OS — guided tour<span class="vd-sub">9 screens · every module</span></div>' +
+          '<div class="vd-phone"><div class="phone"><div class="pscreen" id="vdScreen"></div></div></div>' +
+        '</div>' +
+        '<div class="vd-caption" id="vdCaption"></div>' +
+        '<div class="vd-controls">' +
+          '<button class="vd-ctl-btn" id="vdToggle" aria-label="Play / pause"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1.5 6.2 5 3.8-5 3.8V8.2Z"/></svg></button>' +
+          '<div class="vd-bar" id="vdBar"></div>' +
+          '<span class="vd-step" id="vdStep">01 / 09</span>' +
+        '</div>' +
+      '</div>';
+    // caption sits below the stage inside the inner card
+    var stage = $('.vd-modal-stage', modal);
+    stage.parentNode.insertBefore($('.vd-caption', modal), $('.vd-controls', modal));
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(function () { modal.classList.add('open'); });
+
+    mountScreens(modal);
+    var screen = $('#vdScreen', modal), cap = $('#vdCaption', modal),
+        bar = $('#vdBar', modal), step = $('#vdStep', modal), toggle = $('#vdToggle', modal);
+    var i = 0, playing = true, timer = 0;
+
+    VD_STEPS.forEach(function () { var b = document.createElement('i'); bar.appendChild(b); });
+    function segs() { return $$('i', bar); }
+    function show(n) {
+      i = (n + VD_STEPS.length) % VD_STEPS.length;
+      screen.classList.add('vd-swap');
+      setTimeout(function () {
+        screen.setAttribute('data-screen', VD_STEPS[i].s);
+        mountScreens(screen.parentNode);
+        screen.classList.remove('vd-swap');
+      }, 240);
+      cap.style.opacity = 0;
+      setTimeout(function () { cap.textContent = VD_STEPS[i].t; cap.style.opacity = 1; }, 200);
+      segs().forEach(function (s, si) {
+        s.classList.remove('grow');
+        if (si < i) s.classList.add('fill');
+        else if (si > i) s.classList.remove('fill');
+      });
+      segs()[i].classList.add('grow');
+      step.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(VD_STEPS.length).padStart(2, '0');
+      if (segs()[i].firstChild) segs()[i].removeChild(segs()[i].firstChild);
+      var fill = document.createElement('em');
+      fill.style.cssText = 'position:absolute;inset:0;background:linear-gradient(90deg,#8a63f5,#c4b5fd);transform-origin:left;border-radius:99px;';
+      segs()[i].appendChild(fill);
+      var t0 = performance.now();
+      cancelAnimationFrame(fill._raf);
+      (function anim(now) {
+        if (!playing) { fill._paused = true; return; }
+        var p = Math.min(1, (now - t0) / 2600) + (fill._pf || 0);
+        fill.style.transform = 'scaleX(' + Math.min(1, p) + ')';
+        if (p >= 1) { fill._pf = 1; show(i + 1); }
+        else fill._raf = requestAnimationFrame(anim);
+      })(t0);
+    }
+    toggle.addEventListener('click', function () {
+      playing = !playing;
+      toggle.style.color = playing ? '#dcd2ff' : 'var(--text-dimmer)';
+      if (playing) { show(i + 1); } /* resume on next step */
+    });
+    function close() {
+      playing = false;
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(function () { modal.remove(); }, 420);
+    }
+    $('.vd-modal-close', modal).addEventListener('click', close);
+    modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape') {
+        close();
+        document.removeEventListener('keydown', esc);
+      }
+    });
+    show(0);
+    timer = VD_STEPS.length; /* placeholder to keep linters calm */
+  }
+}
+
 /* ─── BOOT ─────────────────────────────────────────────── */
 function boot() {
+  if (LOW) document.body.classList.add('low-end');
   try { mountScreens(); } catch (e) {}
   try { markActive(); } catch (e) {}
   try { initWipe(); } catch (e) {}
@@ -533,22 +795,43 @@ function boot() {
   try { initFaq(); } catch (e) {}
   try { initDemo(); } catch (e) {}
   try { initTabs(); } catch (e) {}
+  try { initHeadSplit(); } catch (e) {}
+  try { initVideo(); } catch (e) {}
   try {
     ringEl = $('.ring');
-    measureScenes();
-    updateScenes(0);
+    updateScenes();
     renderScenes();
   } catch (e) {}
   try {
-    $$('[data-torus]').forEach(function (host) {
-      var o = {};
-      try { o = JSON.parse(host.getAttribute('data-torus') || '{}'); } catch (e2) {}
-      initTorusHost(host, o);
-    });
+    var torusHosts = $$('[data-torus]');
+    if (torusHosts.length && !RED) {
+      ensureThree(function () {
+        torusHosts.forEach(function (host) {
+          var o = {};
+          try { o = JSON.parse(host.getAttribute('data-torus') || '{}'); } catch (e2) {}
+          initTorusHost(host, o);
+        });
+      });
+    }
   } catch (e) {}
   window.addEventListener('scroll', onScrollAll, { passive: true });
-  window.addEventListener('resize', function () { measureScenes(); }, { passive: true });
   onScrollAll();
+  /* auto-degrade: measure real fps shortly after load — if the device
+     struggles, drop scroll-linked 3D + heavy effects permanently */
+  if (!RED) {
+    setTimeout(function () {
+      var n = 0, t0 = performance.now();
+      (function tick() {
+        n++;
+        if (performance.now() - t0 < 1000) requestAnimationFrame(tick);
+        else if (n < 32) {
+          document.body.classList.add('low-end');
+          LOW = true;
+          if (ringEl) { ringEl.style.transform = ''; }
+        }
+      })();
+    }, 2200);
+  }
   setTimeout(function () { document.body.classList.add('loaded'); }, 120);
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

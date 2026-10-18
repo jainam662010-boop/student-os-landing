@@ -10,7 +10,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js" defer></script>
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body data-page="focus.html">
@@ -46,7 +45,7 @@
 
 <!-- ═══ FOCUS HERO — the session knot ═══ -->
 <section class="focus-hero">
-  <div class="container world-inner" style="grid-template-columns:1fr 1fr;gap:40px">
+  <div class="container world-inner" style="gap:40px">
     <div class="mod-hero-copy">
       <div class="chip"><span class="pulse-dot"></span> Module 01 · Focus</div>
       <h1>Two hours.<br><span class="grad">Zero distractions.</span></h1>
@@ -63,9 +62,19 @@
     </div>
     <div class="focus-stage">
       <div class="knot-wrap">
-        <div class="torus-host" data-torus='{"opacity":0.85,"speed":0.006,"zoom":4.6}' id="knotHost" style="position:absolute;inset:0"></div>
+        <div class="torus-host" data-torus='{"opacity":0.85,"speed":0.006,"zoom":4.6,"interact":true,"particles":true}' id="knotHost" style="position:absolute;inset:0"></div>
+        <div class="knot-aura" aria-hidden="true"></div>
         <div class="orbit spin" style="width:400px;height:400px;"></div>
         <div class="orbit spin2" style="width:480px;height:480px;border-style:dashed;opacity:.5"></div>
+        <svg class="session-ring" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <linearGradient id="srGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#c4b5fd"/><stop offset=".5" stop-color="#8a63f5"/><stop offset="1" stop-color="#3ecf8e"/>
+            </linearGradient>
+          </defs>
+          <circle class="sr-track" cx="100" cy="100" r="96"/>
+          <circle class="sr-prog" id="sessionProg" cx="100" cy="100" r="96" pathLength="1"/>
+        </svg>
         <div class="timer-head">
           <div class="t" id="focusTimerBig">25:00</div>
           <div class="s">deep work session</div>
@@ -76,6 +85,7 @@
             <button class="preset" data-mins="120">2h</button>
           </div>
         </div>
+        <div class="knot-hint"><span class="drag-ic">⇄</span>&nbsp; drag the knot · it breathes with your session</div>
       </div>
       <div class="float-stat fs1" style="position:absolute;top:6%;left:-4%">🔥 Streak 21d</div>
       <div class="float-stat fs2" style="position:absolute;bottom:4%;right:-4%">🛡 Deep Lock · Score 90</div>
@@ -119,8 +129,31 @@
   <div class="reveal-zoom reveal-d1"><div class="phone"><div data-screen="analytics"></div></div><div class="cap">Session insights</div></div>
   <div class="reveal-zoom reveal-d2"><div class="phone"><div data-screen="habits"></div></div><div class="cap">Streaks</div></div>
   <div class="reveal-zoom"><div class="phone"><div data-screen="palette"></div></div><div class="cap">⌘K palette</div></div>
-  <div class="reveal-zoom reveal-d1"><div class="phone"><img class="shot-img" src="assets/focus.png" alt="Focus screen" style="border-radius:30px"></div><div class="cap">Real screenshot</div></div>
+  <div class="reveal-zoom reveal-d1"><div class="phone"><img class="shot-img" src="assets/focus.png" alt="Focus screen" loading="lazy" decoding="async" style="border-radius:30px"></div><div class="cap">Real screenshot</div></div>
 </div>
+
+<!-- ═══ VIDEO WALKTHROUGH ═══ -->
+<section class="video-hero">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow center-eyebrow">Video walkthrough</div>
+      <h2>Watch a focus session<br>come to life.</h2>
+      <p>60-second guided tour — from the timer to Deep Lock, straight from the app.</p>
+    </div>
+    <div class="video-frame reveal-zoom" role="button" tabindex="0" aria-label="Play the app walkthrough">
+      <div class="video-screen">
+        <div class="video-scan" aria-hidden="true"></div>
+        <div class="video-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="video-dur">▶ 1:00 · GUIDED TOUR</div>
+        <div class="vd-phone"><div class="phone" style="--pglow:rgba(138,99,245,.6)"><div data-screen="focus"></div></div></div>
+        <div class="vd-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4.5v15l13-7.5z"/></svg></div>
+      </div>
+    </div>
+    <div class="video-cap">Click the frame — <b>opens the full guided tour</b></div>
+  </div>
+</section>
+
+<div class="container" style="padding:30px 0 0"><div class="sect-wave" aria-hidden="true"></div></div>
 
 <!-- ═══ CTA ═══ -->
 <section class="cta">
