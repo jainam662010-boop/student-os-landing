@@ -232,20 +232,39 @@ function initWipe() {
   var wipe = $('#wipe');
   if (!wipe) return;
   if (RED) { wipe.style.display = 'none'; return; }
+
+  /* bfcache safety: when the page is restored (Back/forward), the cover
+     class can be stuck in the DOM from the previous leave — clear it. */
+  window.addEventListener('pageshow', function (ev) {
+    wipe.classList.remove('cover', 'wipe-shift');
+    wipe.style.pointerEvents = 'none';
+    if (ev.persisted) {
+      // restored from cache: re-run light bootstraps for stale state
+      document.body.style.overflow = '';
+      var menu = $('#mobileMenu');
+      if (menu) { menu.classList.remove('open'); var b = $('#navBurger'); if (b) b.classList.remove('open'); }
+    }
+  });
+
+  /* on page load: flash the cover once, then fade out */
+  wipe.classList.add('cover', 'no-anim');
   requestAnimationFrame(function () {
-    wipe.classList.add('cover');
     requestAnimationFrame(function () {
+      wipe.classList.remove('no-anim');
       wipe.classList.remove('cover');
       setTimeout(function () { wipe.style.pointerEvents = 'none'; }, 450);
     });
   });
+
+  /* intercept internal navigations: cover, then go */
   $$('a[href]').forEach(function (a) {
     var href = a.getAttribute('href') || '';
     if (!href || href.charAt(0) === '#') return;
     if (/^(https?:|mailto:)/.test(href)) return;
     a.addEventListener('click', function (ev) {
       if (ev.metaKey || ev.ctrlKey || ev.shiftKey || a.target === '_blank') return;
-      if (href === window.location.pathname.split('/').pop() || href === '') return;
+      var target = href.split('/').pop();
+      if (target === window.location.pathname.split('/').pop()) return;
       ev.preventDefault();
       wipe.classList.add('cover', 'wipe-shift');
       setTimeout(function () { window.location.href = href; }, 420);
@@ -259,7 +278,7 @@ function initWipe() {
 ──────────────────────────────────────────────────────────── */
 var sceneEls = [], ringEl = null, ringRange = 1;
 function measureScenes() {
-  sceneEls = $$('.scene3d').map(function (el) { return { el: el, t: 0, c: 0 }; });
+  sceneEls = $$('.scene3d').map(function (el) { return { el: el, t: 0, c: 0, prev: -9 }; });
 }
 function updateScenes(scrollY) {
   var vh = window.innerHeight;
@@ -284,9 +303,12 @@ function renderScenes() {
   sceneEls.forEach(function (s) {
     s.c += (s.t - s.c) * 0.12;
     var p = s.c;
-    if (Math.abs(p) < 0.002 && s.el.style.transform === '') return;
-    s.el.style.transform = 'perspective(1200px) rotateY(' + (p * -30) + 'deg) rotateX(' + (p * 9) + 'deg) translateZ(' + (-Math.abs(p) * 220) + 'px) scale(' + (1 - Math.abs(p) * 0.22) + ')';
-    s.el.style.opacity = Math.max(0, 1 - Math.abs(p) * 0.95);
+    /* write style only when the interpolated value still moves — no churn when idle */
+    if (Math.abs(p - s.prev) > 0.0008) {
+      s.prev = p;
+      s.el.style.transform = 'perspective(1200px) rotateY(' + (p * -30) + 'deg) rotateX(' + (p * 9) + 'deg) translateZ(' + (-Math.abs(p) * 220) + 'px) scale(' + (1 - Math.abs(p) * 0.22) + ')';
+      s.el.style.opacity = Math.max(0, 1 - Math.abs(p) * 0.95);
+    }
   });
   if (ringEl && !RED) {
     ringEl.style.transform = 'rotateY(' + (-18 - ringRange * 300) + 'deg)';
@@ -450,26 +472,28 @@ function initDemo() {
     p.addEventListener('click', function () {
       $$('.preset').forEach(function (x) { x.classList.remove('on'); });
       p.classList.add('on');
-      var mins = parseInt(p.getAttribute('data-mins') || '60', 10);
-      var tv = $('#focusTimerBig');
-      if (tv) {
-        var h = Math.floor(mins / 60), m = mins % 60;
-        tv.textContent = (h ? h + ':' : '') + String(m).padStart(2, '0') + ':00';
-      }
+      var mins = parseInt(p.getAttribute('data-mins') || '25', 10);
+      curSec = mins * 60; // the ticking loop reads this single source of truth
+      updateTimerLabel();
     });
   });
-  var miniTimer = $('#miniTimer'), bigTimer = $('#focusTimerBig');
-  var t = 25 * 60;
-  setInterval(function () {
-    t--; if (t < 0) t = 25 * 60;
-    var label = String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
-    if (miniTimer && !RED) miniTimer.textContent = label;
-  }, 1000);
-  if (bigTimer && !RED) {
-    var bt = 25 * 60;
+  /* ONE timer state shared by presets + ticking — no competing intervals */
+  var bigTimer = $('#focusTimerBig');
+  var miniTimer = $('#miniTimer');
+  var curSec = 25 * 60;
+  function updateTimerLabel() {
+    var m = Math.floor(curSec / 60), s = curSec % 60;
+    var label = (m >= 60
+      ? String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0')
+      : String(m).padStart(2, '0')) + ':' + String(s).padStart(2, '0');
+    if (bigTimer) bigTimer.textContent = label;
+    if (miniTimer) miniTimer.textContent = label;
+  }
+  if ((bigTimer || miniTimer) && !RED) {
+    updateTimerLabel();
     setInterval(function () {
-      bt--; if (bt < 0) bt = 25 * 60;
-      bigTimer.textContent = String(Math.floor(bt / 60)).padStart(2, '0') + ':' + String(bt % 60).padStart(2, '0');
+      curSec--; if (curSec < 0) curSec = 25 * 60;
+      updateTimerLabel();
     }, 1000);
   }
 }
@@ -499,28 +523,32 @@ function markActive() {
 
 /* ─── BOOT ─────────────────────────────────────────────── */
 function boot() {
-  mountScreens();
-  markActive();
-  initWipe();
-  initMenu();
-  initReveals();
-  initCursor();
-  initTilt();
-  initFaq();
-  initDemo();
-  initTabs();
-  ringEl = $('.ring');
-  measureScenes();
-  updateScenes(0);
-  renderScenes();
+  try { mountScreens(); } catch (e) {}
+  try { markActive(); } catch (e) {}
+  try { initWipe(); } catch (e) {}
+  try { initMenu(); } catch (e) {}
+  try { initReveals(); } catch (e) {}
+  try { initCursor(); } catch (e) {}
+  try { initTilt(); } catch (e) {}
+  try { initFaq(); } catch (e) {}
+  try { initDemo(); } catch (e) {}
+  try { initTabs(); } catch (e) {}
+  try {
+    ringEl = $('.ring');
+    measureScenes();
+    updateScenes(0);
+    renderScenes();
+  } catch (e) {}
+  try {
+    $$('[data-torus]').forEach(function (host) {
+      var o = {};
+      try { o = JSON.parse(host.getAttribute('data-torus') || '{}'); } catch (e2) {}
+      initTorusHost(host, o);
+    });
+  } catch (e) {}
   window.addEventListener('scroll', onScrollAll, { passive: true });
   window.addEventListener('resize', function () { measureScenes(); }, { passive: true });
   onScrollAll();
-  $$('[data-torus]').forEach(function (host) {
-    var o = {};
-    try { o = JSON.parse(host.getAttribute('data-torus') || '{}'); } catch (e) {}
-    initTorusHost(host, o);
-  });
   setTimeout(function () { document.body.classList.add('loaded'); }, 120);
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
