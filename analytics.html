@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics — Student OS</title>
+<meta name="description" content="Study analytics in Student OS: focus trends, subject distribution, productivity patterns and insight cards.">
+<meta name="theme-color" content="#0a0a14">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js" defer></script>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="analytics.html">
+
+<div class="wipe" id="wipe" aria-hidden="true">
+  <div class="wipe-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></div>
+</div>
+
+<div class="progress" id="progress"></div>
+<div class="ambient" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
+<div class="grid-overlay" aria-hidden="true"></div>
+
+<nav class="topnav" id="topnav">
+  <a class="brand" href="index.html">
+    <span class="brand-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></span>
+    Student OS
+  </a>
+  <div class="nav-links">
+    <a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
+  </div>
+  <div class="nav-right">
+    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
+    <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a><a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
+  <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener" style="color:var(--accent-soft)">Get the app →</a>
+</div>
+
+<div class="page">
+
+<!-- ═══ HERO ═══ -->
+<section class="mod-hero">
+  <div class="mod-hero-copy">
+    <div class="chip"><span class="pulse-dot"></span> Module 05 · Analytics</div>
+    <h1>Your effort,<br><span class="grad">charted.</span></h1>
+    <p class="sub">Every session, subject and habit — turned into trends instead of guesses. Peak hours, subject distribution, completion rate and a habit score.</p>
+    <ul class="flist">
+      <li><span class="dot"></span><span><b>Weekly focus</b> bars, day by day</span></li>
+      <li><span class="dot"></span><span><b>Subject breakdown</b> from your tasks</span></li>
+      <li><span class="dot"></span><span><b>Insight cards</b> — peak hour, habit score, XP curve</span></li>
+    </ul>
+    <div class="btn-row" style="margin-top:26px">
+      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
+      <a class="btn btn-ghost" href="index.html">← All modules</a>
+    </div>
+  </div>
+  <div class="mock-stage">
+    <div class="mock-tilt" id="mockTilt">
+      <div class="phone" style="--pglow:rgba(138,99,245,.4)"><div data-screen="analytics"></div></div>
+      <div class="floater fl1"><span class="f-ic">⏰</span> Peak hour · 5pm</div>
+      <div class="floater fl2"><span class="f-ic">🎯</span> Habit score 92</div>
+      <div class="floater fl3"><span class="f-ic">⚡</span> 4,300 XP total</div>
+      <div class="floater fl4"><span class="f-ic">📈</span> ↑ 38% vs last week</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3D CHART WORLD ═══ -->
+<section class="world">
+  <div class="container"><div class="world-inner">
+    <div class="world-text reveal">
+      <div class="eyebrow">3D render</div>
+      <h2>Your week,<br>with depth.</h2>
+      <p>Focus minutes per day, rendered as a 3D board. Friday's block stands out — the longest session of the week.</p>
+      <ul class="flist">
+        <li><span class="dot"></span><span>Mon → Sun, one bar each</span></li>
+        <li><span class="dot"></span><span>Hover lifts the day you want to inspect</span></li>
+      </ul>
+    </div>
+    <div class="stage3d">
+      <div class="scene3d">
+        <div class="reveal-zoom" style="width:100%;max-width:520px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:22px;padding:26px">
+          <div class="lb" style="margin-bottom:12px">FOCUS MINUTES · THIS WEEK</div>
+          <div class="chart3d">
+            <div class="bar3d reveal-d0" style="--h:34"><b></b><i></i></div>
+            <div class="bar3d reveal-d1" style="--h:52"><b></b><i></i></div>
+            <div class="bar3d" style="--h:40"><b></b><i></i></div>
+            <div class="bar3d" style="--h:58"><b></b><i></i></div>
+            <div class="bar3d" style="--h:47"><b></b><i></i></div>
+            <div class="bar3d hot" style="--h:86"><b></b><i></i></div>
+            <div class="bar3d hot" style="--h:100"><b></b><i></i></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:12px" class="lb"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ═══ SCREENS STRIP ═══ -->
+<section class="container" style="padding:40px 0 30px">
+  <div class="section-head reveal">
+    <div class="eyebrow center-eyebrow">Related screens</div>
+    <h2>Screens around Analytics.</h2>
+  </div>
+</section>
+<div class="strip get-3d">
+  <div class="reveal-zoom"><div class="phone"><div data-screen="analytics"></div></div><div class="cap">Insights</div></div>
+  <div class="reveal-zoom reveal-d1"><div class="phone"><div data-screen="dashboard"></div></div><div class="cap">Today at a glance</div></div>
+  <div class="reveal-zoom reveal-d2"><div class="phone"><div data-screen="focus"></div></div><div class="cap">Session source</div></div>
+</div>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="eyebrow center-eyebrow">Progress, not judgement</div>
+    <h2>Know where your<br><span class="grad">hours went.</span></h2>
+    <div class="btn-row" style="justify-content:center">
+      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get on Google Play</a>
+      <a class="btn btn-ghost" href="privacy.html">Next: Privacy →</a>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page -->
+
+<div class="vignette" aria-hidden="true"></div>
+<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+<script src="assets/main.js" defer></script>
+</body>
+</html>
