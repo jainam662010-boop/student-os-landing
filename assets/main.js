@@ -16,118 +16,165 @@ function $$(s, el) { return Array.prototype.slice.call((el || document).querySel
 /* ────────────────────────────────────────────────────────────
    1. APP SCREEN TEMPLATES  (every screen from the app)
 ──────────────────────────────────────────────────────────── */
-function dots5() { var o = '', i; for (i = 0; i < 5; i++) o += '<div class="ph-d' + (i === 0 ? ' on' : '') + '"></div>'; return o; }
+/* tiny string builder so each screen reads like the real app's JSX */
+function h() { return Array.prototype.join.call(arguments, ''); }
+function appBar(title, badge) {
+  return h('<div class="app-bar"><span class="ab-btn">☰</span><span class="ab-title">', title, '</span>',
+    badge ? '<span class="ab-badge">' + badge + '</span>' : '<span class="ab-xp">⚡ 0</span>', '</div>');
+}
+/* stat cell — mirrors the app's dashboard tiles (tinted icon chip + label) */
+function stat(color, ic, val, label, delta, dir) {
+  return h('<div class="scell"><span class="sc-ic" style="--c:', color, '">', ic, '</span>',
+    '<div class="sc-txt"><div class="sc-v">', val, '</div><div class="sc-l">', label, '</div></div>',
+    delta && delta !== '—' ? '<span class="sc-d ' + (dir || '') + '">' + delta + '</span>' : '', '</div>');
+}
+function rowTask(ic, title, pr, xp) {
+  var p = (pr || '').toLowerCase();
+  var cls = p === 'high' ? 'hi' : p === 'low' ? 'lo' : 'md';
+  return h('<div class="trow"><span class="tck"></span><span class="tic">', ic, '</span><span class="ttl">', title, '</span>',
+    '<span class="pr pr-', cls, '">', pr, '</span><span class="tck-xp">', xp, '</span></div>');
+}
+function rowDone(title, xp) {
+  return h('<div class="trow done"><span class="tck on">✓</span><span class="ttl">', title, '</span><span class="tck-xp">', xp, '</span></div>');
+}
+function habitRow(ic, title, marks) {
+  return h('<div class="hrow"><span class="hic">', ic, '</span><span class="htl">', title, '</span><span class="hgrid">',
+    marks.map(function (m) { return '<i class="' + (m === 1 ? 'on' : m === 2 ? 'on cur' : '') + '"></i>'; }).join(''),
+    '</span></div>');
+}
+function examCard(sub, kind, days, chips, max) {
+  return h('<div class="xcard"><div class="xc-main"><div class="xc-t">', kind, '</div><div class="xc-sub">', sub, '</div></div>',
+    '<div class="xc-side"><span class="xc-days">', days, '</span>',
+    chips.map(function (c) { return '<span class="chipx c-' + c[1] + '">' + c[0] + '</span>'; }).join(''),
+    max ? '<span class="xc-max">Max: ' + max + '</span>' : '', '</div></div>');
+}
 
 var SCREENS = {
   dashboard:
-    '<div class="slide-head"><span class="t">Good evening</span><span class="pill-xp">⚡ Lv 54</span></div>' +
-    '<div class="scr scr-dash">' +
-      '<div class="mini-grid">' +
-        '<div class="tile"><div class="lb">Focus today</div><div class="big scr-foc">3h 20m</div></div>' +
-        '<div class="tile"><div class="lb">Tasks done</div><div class="big">12</div></div>' +
-        '<div class="tile"><div class="lb">Streak</div><div class="big">21d 🔥</div></div>' +
-        '<div class="tile"><div class="lb">Weekly goal</div><div class="big">64%</div></div>' +
+    appBar('Home') +
+    '<div class="scr scr-home">' +
+      '<div class="hello"><div class="ava-h">J</div><div><div class="hm1">Good evening, Jainam</div><div class="hm2">Sunday, 18 October</div></div></div>' +
+      '<div class="moti">Every study hour is a vote for the person you\'re becoming.</div>' +
+      '<div class="quote-q">“Discipline is choosing between what you want now and what you want most.”</div>' +
+      '<div class="stat-grid">' +
+        stat('#7d8cff', '⏱', '0h 6m', 'Focus today', '+100%', 'up') +
+        stat('#3ecf8e', '✓', '0', 'Completed', '—') +
+        stat('#f5a86b', '🔥', '1 day', 'Streak', '—') +
+        stat('#a78bfa', '◎', '9%', 'Goal', '—') +
       '</div>' +
-      '<div class="tile"><div class="lb" style="margin-bottom:2px">This week</div>' +
-        '<div class="heat"><i style="--h:35"></i><i style="--h:55"></i><i style="--h:28"></i><i style="--h:70"></i><i style="--h:46"></i><i style="--h:88"></i><i style="--h:96"></i></div>' +
-      '</div>' +
-      '<div class="tile streak-row"><div class="ring-s"><i>74%</i></div><div><div class="lb">DAILY PROGRESS</div><div class="big" style="font-size:14px">Almost there</div></div></div>' +
-      '<div class="tile" style="flex:1"><div class="lb" style="margin-bottom:4px">UP NEXT</div>' +
-        '<div class="srow"><span class="ic">📚</span>Physics revision<span class="badge b-hi">HIGH</span><span class="meta">16:00</span></div>' +
-        '<div class="srow"><span class="ic">🧪</span>Chemistry mock<span class="badge b-md">MED</span><span class="meta">18:30</span></div>' +
+      '<div class="goal-card"><div class="gc-top"><b>Today vs Goal</b><span>0h of 5h today</span></div>' +
+        '<div class="week-bars">' +
+          [12, 30, 9, 44, 20, 58, 34].map(function (v, i) {
+            return '<div class="wb"><i style="--h:' + v + '%"></i><span>' + ['M','T','W','T','F','S','S'][i] + '</span></div>';
+          }).join('') +
+        '</div>' +
       '</div>' +
     '</div>',
 
   tasks:
-    '<div class="slide-head"><span class="t">Tasks</span><span class="badge b-md">12 open</span></div>' +
+    appBar('Tasks', '12 open') +
     '<div class="scr scr-task">' +
-      '<div class="tile" style="padding:8px"><span style="font-size:10px;color:var(--text-dimmer)">🔍 Search tasks…</span></div>' +
-      '<div class="srow"><span class="ck">✓</span><span style="text-decoration:line-through;opacity:.55">Morning flashcards</span><span class="badge b-lo">15 XP</span></div>' +
-      '<div class="srow"><span class="ck">✓</span><span style="text-decoration:line-through;opacity:.55">Read chapter 4</span><span class="badge b-lo">15 XP</span></div>' +
-      '<div class="tile" style="flex:1"><div class="lb" style="margin-bottom:4px">PENDING</div>' +
-        '<div class="srow"><span class="ic">📚</span>Physics revision<span class="badge b-hi">HIGH · 50 XP</span></div>' +
-        '<div class="srow"><span class="ic">🧪</span>Chemistry mock test<span class="badge b-md">MED · 30 XP</span></div>' +
-        '<div class="srow"><span class="ic">📝</span>Organise notes<span class="badge b-lo">LOW · 15 XP</span></div>' +
-        '<div class="srow"><span class="ic">🔢</span>Maths problem set<span class="badge b-md">MED · 30 XP</span></div>' +
-      '</div>' +
+      '<div class="searchbar">🔍&ensp;Search tasks…</div>' +
+      '<div class="seclbl">Completed</div>' +
+      rowDone('Morning flashcards', '15 XP') +
+      rowDone('Read chapter 4', '15 XP') +
+      '<div class="seclbl">Pending</div>' +
+      rowTask('📚', 'Physics revision', 'HIGH', '50 XP') +
+      rowTask('🧪', 'Chemistry mock test', 'MED', '30 XP') +
+      rowTask('📝', 'Organise notes', 'LOW', '15 XP') +
     '</div>',
 
   kanban:
-    '<div class="slide-head"><span class="t">Board</span><span class="badge b-md">3 lists</span></div>' +
+    appBar('Board', '3 lists') +
     '<div class="scr scr-kan">' +
       '<div class="cols">' +
-        '<div class="col"><span class="lb">TO DO</span><div class="kcard">📝 Review notes</div><div class="kcard">📐 Geometry set</div><div class="kcard">🗂 Subject audit</div></div>' +
-        '<div class="col"><span class="lb">DOING</span><div class="kcard">🧪 Chem mock test</div><div class="kcard">📚 Physics ch.7</div></div>' +
-        '<div class="col"><span class="lb">DONE</span><div class="kcard">✅ Flashcards</div><div class="kcard">✅ Essay draft</div></div>' +
+        '<div class="col"><span class="clb">To do</span><div class="kcard">📝 Review notes</div><div class="kcard">📐 Geometry set</div><div class="kcard">🗂 Subject audit</div></div>' +
+        '<div class="col"><span class="clb">Doing</span><div class="kcard">🧪 Chem mock test</div><div class="kcard">📚 Physics ch.7</div></div>' +
+        '<div class="col"><span class="clb">Done</span><div class="kcard">✅ Flashcards</div><div class="kcard">✅ Essay draft</div></div>' +
       '</div>' +
     '</div>',
 
   habits:
-    '<div class="slide-head"><span class="t">Habits</span><span class="pill-xp">🔥 21d</span></div>' +
+    appBar('Routines', '🔥 21d') +
     '<div class="scr scr-hab">' +
-      '<div class="hrow"><span>💧</span>Hydrate 3L<div class="hgrid"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on cur"></i></div></div>' +
-      '<div class="hrow"><span>📖</span>Read 20 min<div class="hgrid"><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on cur"></i></div></div>' +
-      '<div class="hrow"><span>🏃</span>Workout<div class="hgrid"><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="cur"></i></div></div>' +
-      '<div class="hrow"><span>🌙</span>Sleep before 12<div class="hgrid"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on cur"></i></div></div>' +
-      '<div class="tile" style="flex:1;display:flex;align-items:center;gap:10px"><span style="font-size:26px">🔥</span><div><div class="lb">BEST STREAK</div><div class="big">32 days</div><div class="lb" style="margin-top:2px">TODAY 4/4 · PERFECT</div></div></div>' +
+      habitRow('💧', 'Hydrate 3L', [1, 1, 1, 1, 1, 1, 2]) +
+      habitRow('📖', 'Read 20 min', [1, 1, 0, 1, 1, 1, 2]) +
+      habitRow('🏃', 'Workout', [1, 0, 1, 1, 0, 1, 2]) +
+      habitRow('🌙', 'Sleep before 12', [1, 1, 1, 0, 1, 1, 2]) +
+      '<div class="best-streak"><span class="bs-ic">🔥</span><div><div class="bs-l">Best streak</div><div class="bs-v">32 days</div><div class="bs-s">Today 4/4 · perfect</div></div></div>' +
     '</div>',
 
   month:
-    '<div class="slide-head"><span class="t">October</span><span class="badge b-md">EXAMS IN 9d</span></div>' +
+    appBar('Planner', 'Exams in 9d') +
     '<div class="scr scr-month">' +
-      '<div class="lb">MO&ensp;TU&ensp;WE&ensp;TH&ensp;FR&ensp;SA&ensp;SU</div>' +
+      '<div class="cal-head"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>' +
       '<div class="cal">' +
-        [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28].map(function(d){
+        [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28].map(function (d) {
           var cls = 'span';
-          if (d === 27) cls += ' today';
+          if (d === 18) cls += ' today';
           if (d === 6 || d === 13 || d === 20 || d === 21) cls += ' ev';
-          return '<' + cls + '>' + d + '</' + cls + '>';
+          return '<span class="' + cls + '">' + d + '</span>';
         }).join('') +
       '</div>' +
-      '<div class="tile"><span class="lb">TODAY</span><div class="srow" style="padding:6px 0"><span class="ic" style="background:rgba(177,140,250,.15)">📖</span>Revision · Physics<span class="meta">4–6pm</span></div></div>' +
+      '<div class="today-card"><div class="tc-l">Today</div>' +
+        '<div class="trow"><span class="tic" style="background:rgba(125,140,255,.16)">📖</span><span class="ttl">Revision · Physics</span><span class="ttl-meta">4–6pm</span></div>' +
+      '</div>' +
     '</div>',
 
   week:
-    '<div class="slide-head"><span class="t">This week</span><span class="badge b-md">12 events</span></div>' +
+    appBar('Exams', '1 upcoming') +
     '<div class="scr scr-week">' +
-      '<div class="wk">' +
-        '<div class="day"><span class="lb">MON</span><div class="ev ev-study">Physics · 4pm</div><div class="ev ev-break">Gym · 7pm</div></div>' +
-        '<div class="day"><span class="lb">TUE</span><div class="ev ev-rev">Revision · 2pm</div></div>' +
-        '<div class="day"><span class="lb">WED</span><div class="ev ev-exam">Mock test</div><div class="ev ev-study">Maths · 6pm</div></div>' +
+      '<div class="add-exam">＋&ensp;Add exam</div>' +
+      '<div class="exam-stats">' +
+        '<div class="es"><div class="es-v">1</div><div class="es-l">Total</div></div>' +
+        '<div class="es"><div class="es-v">1</div><div class="es-l">Upcoming</div></div>' +
+        '<div class="es"><div class="es-v">0</div><div class="es-l">Completed</div></div>' +
+        '<div class="es"><div class="es-v">—</div><div class="es-l">Avg score</div></div>' +
       '</div>' +
-      '<div class="tile" style="padding:8px"><span class="lb">ZOOM FOR DAY & MONTH VIEWS</span></div>' +
+      '<div class="seclbl">Upcoming</div>' +
+      examCard('All', 'Minor test', '14 days left', [['Not started', 'red'], ['All', 'blue']], '180') +
     '</div>',
 
   analytics:
-    '<div class="slide-head"><span class="t">Insights</span><span class="pill-xp">↑ 38%</span></div>' +
+    appBar('Trends', '↑ 38%') +
     '<div class="scr scr-sci">' +
-      '<div class="tile" style="flex:1"><div class="lb">FOCUS THIS WEEK</div>' +
+      '<div class="trend-card"><div class="tc-l">Focus this week<em>7h 20m</em></div>' +
         '<div class="bars"><i style="--h:30"></i><i style="--h:52"></i><i style="--h:24"></i><i style="--h:66"></i><i style="--h:44"></i><i style="--h:82"></i><i style="--h:96"></i></div>' +
       '</div>' +
-      '<div class="tile donut-wrap"><div class="donut"></div><div><div class="lb">SUBJECTS</div><div class="srow" style="border:0;padding:3px 0">🟣 Physics 38%</div><div class="srow" style="border:0;padding:3px 0">🔵 Maths 30%</div><div class="srow" style="border:0;padding:3px 0">🟢 Biology 22%</div></div></div>' +
+      '<div class="tile donut-wrap"><div class="donut"></div><div><div class="tc-l">Subjects</div>' +
+        '<div class="legend"><i style="--c:#7d8cff"></i>Physics<em>38%</em></div>' +
+        '<div class="legend"><i style="--c:#3ecf8e"></i>Maths<em>30%</em></div>' +
+        '<div class="legend"><i style="--c:#f5a86b"></i>Biology<em>22%</em></div>' +
+      '</div></div>' +
     '</div>',
 
   focus:
-    '<div class="slide-head"><span class="t">Focus</span><span class="pill-xp">🛡 ON</span></div>' +
+    appBar('Focus', '🛡 ON') +
     '<div class="scr scr-focus">' +
-      '<div class="ring-wrap">' +
-        '<svg viewBox="0 0 140 140" width="140" height="140"><circle class="track" cx="70" cy="70" r="62"/><circle class="prog" cx="70" cy="70" r="62" pathLength="1"/></svg>' +
-        '<div class="tval scr-timer">25:00</div>' +
+      '<div class="fk-stage" aria-hidden="true"><div class="css-knot">' +
+        '<i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="ck-core"></span>' +
+      '</div></div>' +
+      '<div class="fk-ring-wrap">' +
+        '<svg viewBox="0 0 200 200" aria-hidden="true">' +
+          '<circle class="fkr-track" cx="100" cy="100" r="86"/>' +
+          '<circle class="fkr-prog" cx="100" cy="100" r="86" pathLength="1"/>' +
+        '</svg>' +
+        '<div class="fk-time">1:00:00</div>' +
+        '<div class="fk-status">deep work</div>' +
       '</div>' +
-      '<div style="text-align:center" class="lb">DEEP WORK SESSION</div>' +
-      '<div class="presets"><span>30m</span><span class="on">1h</span><span>90m</span><span>2h</span></div>' +
-      '<div class="tile" style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">🛡️</span><div><div class="big" style="font-size:12px">Deep Lock</div><div class="lb">SCORE 90 · EXCELLENT</div></div></div>' +
+      '<div class="fk-presets"><span>25m</span><span class="on">1h</span><span>90m</span><span>2h</span></div>' +
+      '<div class="fk-pills"><span>⏱ 0h today</span><span>🔥 0 streak</span><span>🎯 9% goal</span></div>' +
     '</div>',
 
   palette:
-    '<div class="slide-head"><span class="t">⌘K</span><span class="badge b-md">PALETTE</span></div>' +
+    appBar('⌘K', 'PALETTE') +
     '<div class="scr scr-pal">' +
       '<div class="search">⌘<span>Type a command…</span></div>' +
       '<div class="overlay">' +
         '<div class="grp">Navigate</div>' +
-        '<div class="cmd sel">🏠 Dashboard<span class="kbd">G D</span></div>' +
+        '<div class="cmd sel">🏠 Home<span class="kbd">G H</span></div>' +
         '<div class="cmd">⏱️ Focus mode<span class="kbd">G F</span></div>' +
-        '<div class="cmd">✅ Tasks<span class="kbd">G T</span></div>' +
+        '<div class="cmd">📅 Planner<span class="kbd">G P</span></div>' +
         '<div class="grp">Actions</div>' +
         '<div class="cmd">＋ Add task<span class="kbd">A</span></div>' +
         '<div class="cmd">🌙 Toggle AMOLED<span class="kbd">T</span></div>' +
@@ -135,32 +182,65 @@ var SCREENS = {
     '</div>',
 
   settings:
-    '<div class="slide-head"><span class="t">Settings</span><span class="badge b-md">LOCAL</span></div>' +
+    appBar('Settings', 'LOCAL') +
     '<div class="scr scr-set">' +
-      '<div class="prof"><div class="ava">JK</div><div><div class="big" style="font-size:13px">Jainam</div><div class="lvl">LEVEL 54 · 4,300 XP</div></div></div>' +
+      '<div class="prof"><div class="ava">J</div><div><div class="pn">Jainam</div><div class="lvl">Level 54 · 4,300 XP</div></div></div>' +
       '<div class="row">Dark theme<div class="sw on"></div></div>' +
       '<div class="row">AMOLED black<div class="sw"></div></div>' +
-      '<div class="row">Accent<div class="themes"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>' +
-      '<div class="row">Weekly goal<span class="big" style="font-size:11px">5h</span></div>' +
-      '<div class="row">Export data<div class="sw"></div></div>' +
-      '<div class="tile" style="flex:1"><div class="lb">ALL DATA STAYS ON THIS DEVICE</div></div>' +
+      '<div class="row">Accent<div class="themes"><i style="--c:#7d8cff" class="on"></i><i style="--c:#3ecf8e"></i><i style="--c:#f5a86b"></i><i style="--c:#e58fd8"></i><i style="--c:#4fd1c5"></i><i style="--c:#a78bfa"></i></div></div>' +
+      '<div class="row">Weekly goal<span class="rv">5h</span></div>' +
+      '<div class="row">Export data<span class="rv">JSON</span></div>' +
+      '<div class="note">🔒&ensp;All data stays on this device</div>' +
+    '</div>',
+
+  deeplock:
+    appBar('Deep Lock', '🛡 ON') +
+    '<div class="scr scr-lock">' +
+      '<div class="lock-top"><div class="lock-shield">🛡️</div>' +
+        '<div class="lock-score"><b>90</b><span>Excellent</span></div>' +
+      '</div>' +
+      '<div class="lock-bar"><i style="--w:90%"></i></div>' +
+      '<div class="seclbl">Blocked while focusing</div>' +
+      '<div class="chipx-row"><span class="chipa">Instagram</span><span class="chipa">YouTube</span><span class="chipa">Reddit</span><span class="chipa">Games</span></div>' +
+      '<div class="note">Focus Shield blocks distractors — no screen content is ever read</div>' +
     '</div>'
 };
+SCREENS.exams = SCREENS.week;
+SCREENS.routines = SCREENS.habits;
+SCREENS.trends = SCREENS.analytics;
+SCREENS.home = SCREENS.dashboard;
+SCREENS.board = SCREENS.kanban;
 
-var NAV_ORDER = ['Focus', 'Tasks', 'Habits', 'Planner', 'Insights', 'You'];
-function phoneChrome(tag) {
-  return '<div class="pstatus"><span>7:35</span><div class="pdots">●●●</div></div>' + tag + '<div class="pnav">' + dots5() + '</div>';
+/* the app's real 7-tab bottom bar */
+var NAV = [
+  ['Home', 'M3 10.4 12 3l9 7.4V21h-6.2v-6.2H9.2V21H3z'],
+  ['Focus', 'M12 3.2a8.8 8.8 0 1 0 0 17.6 8.8 8.8 0 0 0 0-17.6Zm0 4.7V12l3.1 2'],
+  ['Planner', 'M4.2 5.4h15.6V21H4.2zM8 3v4.4M16 3v4.4M4.2 10.6h15.6'],
+  ['Routines', 'M12 3.2a8.8 8.8 0 1 0 8.8 8.8M12 3.2v8.8h8.8'],
+  ['Deep Lock', 'M12 3l7.2 3v5.8c0 4.2-3 7.2-7.2 9.2-4.2-2-7.2-5-7.2-9.2V6z'],
+  ['Trends', 'M4 20.2V10M10 20.2V3.8M16 20.2v-7.4M22 20.2H2.4'],
+  ['Settings', 'M12 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2Zm0-5.4v2.8m0 12.4v2.8M3 12h2.8m12.4 0H21']
+];
+/* which real tab each mock screen belongs to */
+var TAB_OF = { dashboard: 0, home: 0, focus: 1, tasks: 2, kanban: 2, board: 2, palette: 2, month: 2, week: 2, exams: 2, habits: 3, routines: 3, deeplock: 4, analytics: 5, trends: 5, settings: 6 };
+
+function tabbar(active) {
+  return '<div class="tabbar">' + NAV.map(function (n, i) {
+    return '<div class="tb' + (i === active ? ' on' : '') + '">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="' + n[1] + '"/></svg>' +
+      '<span>' + n[0] + '</span></div>';
+  }).join('') + '</div>';
+}
+function statusbar() {
+  return '<div class="pstatus"><span>7:35</span><span class="ps-ic"><i></i><i></i><i></i><b></b></span></div>';
 }
 function mountScreens(root) {
   $$('[data-screen]', root || document).forEach(function (ph) {
     var name = ph.getAttribute('data-screen');
     if (!SCREENS[name]) return;
-    var idxMap = { dashboard: 0, tasks: 1, kanban: 1, habits: 2, month: 3, week: 3, analytics: 4, focus: 1, palette: 1, settings: 4 };
-    var idx = idxMap[name] != null ? idxMap[name] : 0;
-    var nd = ''; for (var i = 0; i < 5; i++) { nd += '<div class="ph-d' + (i === idx ? ' on' : '') + '"></div>'; }
+    var idx = TAB_OF[name] != null ? TAB_OF[name] : 0;
     ph.classList.add('pscreen');
-    ph.innerHTML = '<div class="pstatus"><span>7:35</span><div class="pdots">●●●</div></div>' +
-      SCREENS[name] + '<div class="pnav">' + nd + '</div>';
+    ph.innerHTML = statusbar() + SCREENS[name] + tabbar(idx);
   });
 }
 
@@ -782,6 +862,44 @@ function initVideo() {
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   10. 3D SCROLL STORY — a pinned phone that rotates as you scroll
+   (rotation runs on the compositor via scroll-timeline; screen swaps
+   are driven by rare IntersectionObserver hits, never per frame)
+──────────────────────────────────────────────────────────── */
+function initStory() {
+  var story = $('#story');
+  if (!story) return;
+  var screen = $('#storyScreen');
+  var steps = $$('.sstep', story);
+  if (!screen || !steps.length) return;
+  var SEQ = ['focus', 'month', 'analytics'];
+
+  function setStep(i) {
+    steps.forEach(function (s, k) { s.classList.toggle('on', k === i); });
+    var holder = screen.parentNode;
+    holder.classList.add('mock-live');
+    if (screen.getAttribute('data-screen') === SEQ[i]) return;
+    screen.setAttribute('data-screen', SEQ[i]);
+    mountScreens(holder);
+  }
+
+  if (RED || typeof IntersectionObserver === 'undefined') { setStep(0); return; }
+
+  var n = steps.length;
+  steps.forEach(function (s, i) {
+    var sent = document.createElement('div');
+    sent.className = 'story-sentinel';
+    sent.style.top = (i * 100 / n) + '%';
+    sent.style.height = (100 / n) + '%';
+    sent.setAttribute('aria-hidden', 'true');
+    story.appendChild(sent);
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) setStep(i); });
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 }).observe(sent);
+  });
+}
+
 /* ─── BOOT ─────────────────────────────────────────────── */
 function boot() {
   if (LOW) document.body.classList.add('low-end');
@@ -797,6 +915,7 @@ function boot() {
   try { initTabs(); } catch (e) {}
   try { initHeadSplit(); } catch (e) {}
   try { initVideo(); } catch (e) {}
+  try { initStory(); } catch (e) {}
   try {
     ringEl = $('.ring');
     updateScenes();
