@@ -1,235 +1,433 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Student OS — The Operating System Built for Students</title>
-<meta name="description" content="Student OS is a calm, offline-first study workspace: focus timer, tasks, habits, planner and analytics in one private app. No account. No ads. On-device only.">
-<meta name="theme-color" content="#0a0a14">
-<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student OS: the operating system built for students</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#15141c;--paper:#f6f5fa;--indigo:#5b5bf0;--teal:#17b3a1;--violet:#9b64f2;--amber:#ff9b62;--rose:#ee5fa7;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Instrument Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0px)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--indigo);outline-offset:3px}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.01em}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:99px;background:var(--ink);color:#fff;text-decoration:none;font-weight:600;font-size:15px}
+.btn.ghost{background:transparent;color:var(--ink);padding:14px 10px}
+
+/* nav */
+.nav{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:36px;background:var(--ink);color:#fff;padding:8px 8px 8px 20px;border-radius:99px;font-size:14px;white-space:nowrap}
+.nav b{font-weight:700;letter-spacing:-.02em}
+.nav a.go{background:#fff;color:var(--ink);padding:9px 16px;border-radius:99px;text-decoration:none;font-weight:600}
+
+/* hero tunnel */
+.hero{height:340vh;height:340svh;position:relative}
+.sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--paper)}
+.cam{position:absolute;inset:0;perspective:900px}
+.stage{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.tunnel{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.wall{position:absolute;display:flex;flex-wrap:wrap;align-content:flex-start;background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%3E%3Crect%20x='7'%20y='7'%20width='186'%20height='186'%20rx='14'%20fill='%23fff'%20fill-opacity='.7'%20stroke='%2314131c'%20stroke-opacity='.045'/%3E%3C/svg%3E")}
+.t{width:200px;height:200px;padding:7px}
+.e{width:100%;height:100%;border-radius:14px}
+.c{width:100%;height:100%;border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(20,19,28,.07)}
+.c small{font-size:14px;opacity:.7}
+.c b{font-size:28px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.c i{font-style:normal;font-size:13px;opacity:.75}
+.c .r{display:flex;align-items:center;gap:8px;margin:5px 0}
+.c .r span{width:10px;height:10px;border-radius:50%}
+.c .r em{flex:1;height:8px;border-radius:4px;background:rgba(20,19,28,.12)}
+.c .bars{display:flex;align-items:flex-end;gap:7px;height:80px}
+.c .bars span{flex:1;border-radius:4px;background:var(--indigo)}
+.c.amb{justify-content:center;align-items:stretch}
+.c.amb .bars{height:110px}
+.c .dots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:96px;margin:auto}
+.c .dots span{aspect-ratio:1;border-radius:50%;background:rgba(20,19,28,.1)}
+.c .dots span.on{background:var(--indigo);opacity:.6}
+.c .rows{display:flex;flex-direction:column;gap:11px;width:100%;margin:auto}
+.c .rows span{height:12px;border-radius:6px;background:rgba(20,19,28,.08);position:relative;overflow:hidden}
+.c .rows span::after{content:'';position:absolute;inset:0 auto 0 0;width:var(--w,60%);border-radius:6px;background:var(--indigo);opacity:.65}
+.fog{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 52% 46% at 50% 50%,rgba(246,245,250,.97) 0,rgba(246,245,250,.9) 45%,rgba(246,245,250,0) 100%)}
+.copy{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 24px;z-index:5}
+.copy h1,.copy h2{margin:0 auto;font-weight:600;letter-spacing:-.045em;line-height:1;font-size:clamp(38px,6.4vw,84px);max-width:13em}
+.copy p{margin:22px auto 28px;max-width:34em;font-size:clamp(15px,1.7vw,18px);line-height:1.5;color:#4a4958}
+.copy .row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+#c2{opacity:0}
+.hint{position:absolute;bottom:calc(22px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);font-size:13px;color:#4a4958;background:rgba(246,245,250,.82);padding:7px 14px;border-radius:99px;pointer-events:none;white-space:nowrap;z-index:5}
+
+/* 3d gallery */
+.gal{height:300vh;height:300svh;position:relative;background:radial-gradient(58% 44% at 50% 54%,#e9e6ff 0,rgba(246,245,250,0) 72%)}
+.gal-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:72px 0 26px}
+.gal-head{text-align:center;max-width:820px;margin:0 auto;padding:0 24px}
+.gal-eyebrow{display:block;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--indigo);margin-bottom:14px}
+.gal-head h2{margin:0;font-size:clamp(30px,4.2vw,56px);line-height:.98;letter-spacing:-.045em;font-weight:600}
+.gal-head p{margin:14px auto 0;max-width:34em;font-size:15.5px;line-height:1.5;color:#5c5b6b}
+.gal-view{position:relative;height:min(54vh,520px);height:min(54svh,520px);margin-top:28px;perspective:1400px;perspective-origin:50% 50%}
+.gal-view::after{content:'';position:absolute;left:50%;bottom:-34px;width:min(660px,82vw);height:88px;transform:translateX(-50%);background:radial-gradient(50% 50% at 50% 50%,rgba(91,91,240,.2),transparent 70%);filter:blur(6px);pointer-events:none}
+.gal-track{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.gcard{position:absolute;left:50%;top:50%;height:min(52vh,500px);height:min(52svh,500px);width:auto;aspect-ratio:534/1170;margin:0;padding:6px;border-radius:26px;background:#0b0a10;transform:translate(-50%,-50%);transform-origin:50% 50%;box-shadow:0 30px 60px -18px rgba(20,19,28,.45);will-change:transform,opacity;user-select:none;-webkit-user-select:none}
+.gcard img{display:block;width:100%;height:100%;object-fit:cover;border-radius:21px;background:#111119;-webkit-user-drag:none;pointer-events:none}
+.gcard::after{content:'';position:absolute;inset:6px;border-radius:21px;background:linear-gradient(118deg,rgba(255,255,255,.16),rgba(255,255,255,0) 44%);pointer-events:none}
+.gal-foot{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:26px;padding:0 24px;font-size:13px;color:#5c5b6b}
+.gal-foot b{color:var(--ink);font-weight:600;min-width:6em;text-align:right}
+.gal-count{font-variant-numeric:tabular-nums;min-width:4.5em;text-align:right}
+.gal-rail{width:min(200px,30vw);height:2px;background:rgba(20,19,28,.12);position:relative;overflow:hidden;border-radius:2px}
+.gal-rail i{position:absolute;inset:0 auto 0 0;width:0;background:var(--ink);border-radius:2px}
+
+/* editorial */
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.ed{padding:140px 0 100px}
+.ed .top{display:grid;grid-template-columns:1.5fr 1fr;gap:60px;align-items:end}
+.ed h2{margin:0;font-size:clamp(40px,6.2vw,88px);line-height:.98;letter-spacing:-.045em;font-weight:600}
+.ed .top p{font-size:18px;line-height:1.5;margin:0;max-width:22em}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:90px}
+.feat h3{margin:0 0 10px;font-size:18px;letter-spacing:-.01em}
+.feat p{margin:0;color:#585767;line-height:1.55;font-size:15px}
+
+.aur{position:relative;overflow:hidden;text-align:center;padding:110px 20px 0;background:radial-gradient(60% 40% at 50% 70%,rgba(255,155,98,.6),transparent 70%),radial-gradient(45% 35% at 25% 60%,rgba(238,95,167,.5),transparent 70%),radial-gradient(45% 35% at 78% 62%,rgba(91,91,240,.4),transparent 70%)}
+.aur h2{margin:0 auto;font-size:clamp(34px,5vw,64px);letter-spacing:-.04em;line-height:1;font-weight:600;max-width:12em}
+.stagebox{position:relative;max-width:760px;margin:50px auto 0}
+.ph{width:270px;height:520px;margin:0 auto;border-radius:42px 42px 0 0;background:#0c0b12;padding:11px 11px 0;-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
+.scr{height:100%;border-radius:32px 32px 0 0;background:#17161f;color:#fff;padding:26px 18px;text-align:center}
+.scr small{opacity:.6;font-size:12px}
+.ring{width:190px;height:190px;border-radius:50%;margin:22px auto;display:grid;place-items:center;background:radial-gradient(circle,#17161f 0 63%,transparent 64%),conic-gradient(var(--teal) 0 72%,#26343a 0)}
+.ring b{font-size:27px;letter-spacing:-.03em}
+.chip{position:absolute;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:16px;padding:11px 16px;text-align:left;font-size:13px;box-shadow:0 12px 30px rgba(20,19,28,.12)}
+.chip b{display:block;font-size:20px;letter-spacing:-.02em}
+
+.band{background:linear-gradient(120deg,#46208f,#c0398f 55%,#ff9b62);color:#fff;padding:110px 0}
+.band .g{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.band h2{margin:0 0 18px;font-size:clamp(36px,5vw,68px);line-height:1;letter-spacing:-.04em;font-weight:600}
+.band p{margin:0;font-size:17px;line-height:1.55;max-width:26em;opacity:.9}
+.glass{background:rgba(255,255,255,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:28px;padding:26px;display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:center}
+.wk{display:flex;align-items:flex-end;gap:9px;height:150px}
+.wk span{flex:1;border-radius:6px 6px 3px 3px;background:#fff;opacity:.92}
+.wkl{display:flex;gap:9px;margin-top:8px;font-size:12px;opacity:.8}.wkl span{flex:1;text-align:center}
+.donut{width:130px;height:130px;border-radius:50%;margin:0 auto;background:radial-gradient(circle,#8a2f9a 0 52%,transparent 53%),conic-gradient(#fff 0 40%,#ffd0a8 0 68%,#7fe3d6 0 100%)}
+.lg{font-size:12px;margin-top:12px;line-height:1.7}
+.note{grid-column:1/-1;font-size:12px;opacity:.7}
+
+.priv{padding:130px 0 90px}
+.priv h2{margin:0 0 60px;font-size:clamp(36px,5.4vw,76px);line-height:1;letter-spacing:-.045em;font-weight:600;max-width:12em}
+.pl{display:grid;grid-template-columns:1fr 1fr;column-gap:60px}
+.pl div{border-top:1px solid rgba(20,19,28,.18);padding:22px 0 34px}
+.pl h3{margin:0 0 6px;font-size:22px;letter-spacing:-.02em}
+.pl p{margin:0;color:#585767;font-size:15px;line-height:1.5}
+.src{margin-top:10px;font-size:13px;color:#6b6a78}
+
+.cta{text-align:center;padding:90px 24px 110px}
+.cta h2{margin:0 auto 34px;font-size:clamp(42px,8vw,110px);line-height:.95;letter-spacing:-.05em;font-weight:600;max-width:10em}
+footer{border-top:1px solid rgba(20,19,28,.12);padding:26px 24px calc(30px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#6b6a78}
+
+@media(max-width:820px){
+ .hero{height:260vh;height:260svh}
+ .nav{gap:18px}
+ .ed{padding:100px 0 70px}.ed .top,.band .g,.glass,.pl,.feat{grid-template-columns:1fr}
+ .ed .top{gap:24px}.feat{gap:30px;margin-top:56px}.band{padding:80px 0}.chip{display:none}
+ .gal-pin{padding:64px 0 18px}
+ .gal-head h2{font-size:clamp(30px,8vw,44px)}
+ .gal-head p{font-size:14.5px;margin-top:12px}
+ .gal-view{height:min(46vh,400px);height:min(46svh,400px);margin-top:22px}
+ .gcard{height:min(44vh,380px);height:min(44svh,380px);padding:5px;border-radius:22px}
+ .gcard img{border-radius:18px}.gcard::after{inset:5px;border-radius:18px}
+ .gal-foot{margin-top:18px;gap:12px}
+}
+@media(max-width:380px){
+ .gal-head p{display:none}
+ .gal-view{height:min(46vh,340px);height:min(46svh,340px)}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}.hero{height:100vh;height:100svh}.hint{display:none}#c2{display:none}
+ .gal{height:auto;background:var(--paper)}
+ .gal-pin{position:static;height:auto;overflow:visible;padding:76px 0 24px}
+ .gal-view{perspective:none;height:auto;margin-top:32px}
+ .gal-view::after{display:none}
+ .gal-track{position:static;display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;padding:6px 24px 20px;scroll-snap-type:x mandatory;scrollbar-width:none;will-change:auto}
+ .gal-track::-webkit-scrollbar{display:none}
+ .gcard{position:relative;left:auto;top:auto;flex:0 0 auto;height:min(54svh,420px);transform:none!important;scroll-snap-align:center;will-change:auto}
+ .gal-foot{display:none}
+}
+</style>
 </head>
-<body data-page="index.html">
+<body>
+<nav class="nav"><b>Student OS</b><a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a></nav>
 
-<div class="wipe" id="wipe" aria-hidden="true">
-  <div class="wipe-mark">
-    <svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+<header class="hero" id="hero">
+ <div class="sticky">
+  <div class="cam" aria-hidden="true"><div class="stage" id="stage"><div class="tunnel" id="tunnel"></div></div><div class="fog"></div></div>
+  <div class="copy" id="c1">
+   <h1>The operating system built for students.</h1>
+   <p>Plan the day, lock in your focus and keep your streak, all in one Android app. No account, no ads.</p>
+   <div class="row"><a class="btn" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get it on Google Play</a><a class="btn ghost" href="#how">See how it works</a></div>
   </div>
-</div>
+  <div class="copy" id="c2" aria-hidden="true"><h2>Your whole study day, <span class="serif">in one place.</span></h2></div>
+  <div class="hint">Scroll to fly through</div>
+ </div>
+</header>
 
-<div class="progress" id="progress"></div>
-<div class="ambient" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="grid-overlay" aria-hidden="true"></div>
-
-<nav class="topnav" id="topnav">
-  <a class="brand" href="index.html">
-    <span class="brand-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></span>
-    Student OS
-  </a>
-  <div class="nav-links">
-    <a href="focus.html">Focus</a>
-    <a href="tasks.html">Tasks</a>
-    <a href="habits.html">Habits</a>
-    <a href="planner.html">Planner</a>
-    <a href="analytics.html">Analytics</a>
-    <a href="privacy.html">Privacy</a>
+<main>
+<section class="gal" id="gallery" aria-labelledby="gal-title">
+ <div class="gal-pin">
+  <div class="gal-head">
+   <span class="gal-eyebrow">Inside the app</span>
+   <h2 id="gal-title">Real screens, <span class="serif">not mockups.</span></h2>
+   <p>Five Android screens from the shipped app, in the order you'd use them. Scroll to move through the day.</p>
   </div>
-  <div class="nav-right">
-    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-    <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <div class="gal-view">
+   <div class="gal-track" id="gal-track">
+    <figure class="gcard" data-name="Home"><img src="assets/gallery/home.webp" width="534" height="1170" alt="Student OS home screen showing today's focus, streak and study goal" loading="eager" decoding="async"></figure>
+    <figure class="gcard" data-name="Exams"><img src="assets/gallery/exams.webp" width="534" height="1170" alt="Exams screen listing total, upcoming and completed exams" loading="eager" decoding="async"></figure>
+    <figure class="gcard" data-name="New exam"><img src="assets/gallery/new-exam.webp" width="534" height="1170" alt="New exam form with subject, date, time and maximum marks" loading="eager" decoding="async"></figure>
+    <figure class="gcard" data-name="New assignment"><img src="assets/gallery/assignment.webp" width="534" height="1170" alt="New assignment sheet with the subject picker open" loading="eager" decoding="async"></figure>
+    <figure class="gcard" data-name="Welcome"><img src="assets/gallery/splash.webp" width="534" height="1170" alt="Student OS welcome screen with the app name and a tap to skip prompt" loading="eager" decoding="async"></figure>
+   </div>
   </div>
-</nav>
-
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Home</a>
-  <a href="focus.html">Focus</a>
-  <a href="tasks.html">Tasks</a>
-  <a href="habits.html">Habits</a>
-  <a href="planner.html">Planner</a>
-  <a href="analytics.html">Analytics</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener" style="color:var(--accent-soft)">Get the app →</a>
-</div>
-
-<div class="page">
-
-<!-- ═════ HERO ═════ -->
-<section class="hero">
-  <div class="hero-glow" aria-hidden="true"></div>
-  <div class="torus-host" data-torus='{"opacity":0.5,"speed":0.0035,"scale":1.25,"zoom":7}'>
-    <div class="orbit spin" style="width:520px;height:520px;"></div>
-    <div class="orbit spin2" style="width:660px;height:660px;border-style:dashed;opacity:.5;"></div>
-  </div>
-  <div class="hero-copy">
-    <div class="chip"><span class="pulse-dot"></span> Now on Google Play</div>
-    <h1>
-      <span class="word"><b>The</b></span> <span class="word"><b style="animation-delay:.08s">Operating</b></span><br>
-      <span class="word"><b style="animation-delay:.16s">System <span class="grad">for Students.</span></b></span>
-    </h1>
-    <div class="hero-sub">Focus sessions, tasks, habits, planner and analytics in one calm, offline-first workspace. <b>No account. No ads. On-device only.</b></div>
-    <div class="btn-row">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.6 2.3 13.7 12 3.6 21.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1Zm11.5 8.3 2.6-2.5 2.7 1.5c.9.5.9 1.8 0 2.3l-2.7 1.5-2.6-2.5 0-.3ZM5.1 2.9 15 8.6l-2.2 2.1L5.1 2.9Zm0 18.2 7.7-7.8L15 15.4 5.1 21.1Z"/></svg>
-        Get on Google Play
-      </a>
-      <a class="btn btn-ghost" href="focus.html">Explore the OS →</a>
-    </div>
-    <div class="trust-row" style="margin-top:24px">
-      <span>★ Education</span><span class="trust-dot">·</span><span>No ads</span><span class="trust-dot">·</span><span>No account</span><span class="trust-dot">·</span><span>On-device only</span>
-    </div>
-  </div>
-  <div class="mock-stage" id="heroPhoneWrap">
-    <div class="mock-tilt" id="heroTilt">
-      <div class="phone mock-live" style="--pglow:rgba(138,99,245,.5)">
-        <div data-screen="dashboard"></div>
-      </div>
-      <div class="floater fl1"><span class="f-ic">🔥</span> 21-day streak</div>
-      <div class="floater fl2"><span class="f-ic">🛡️</span> Deep Lock · on</div>
-      <div class="floater fl3"><span class="f-ic">⏱️</span> 3h 20m focused</div>
-      <div class="floater fl4"><span class="f-ic">📈</span> +38% this week</div>
-    </div>
-  </div>
+  <div class="gal-foot"><b id="gal-name">Home</b><div class="gal-rail"><i id="gal-rail"></i></div><span class="gal-count" id="gal-count">01 / 05</span></div>
+ </div>
 </section>
 
-<!-- ═══ MARQUEE ═══ -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    <span class="marquee-item">Focus Timer</span><span class="marquee-item">Task Manager</span><span class="marquee-item">Habit Streaks</span><span class="marquee-item">Study Planner</span><span class="marquee-item">Analytics</span><span class="marquee-item">Deep Lock</span><span class="marquee-item">Command Palette</span><span class="marquee-item">3 Themes</span><span class="marquee-item">Offline-first</span>
-    <span class="marquee-item">Focus Timer</span><span class="marquee-item">Task Manager</span><span class="marquee-item">Habit Streaks</span><span class="marquee-item">Study Planner</span><span class="marquee-item">Analytics</span><span class="marquee-item">Deep Lock</span><span class="marquee-item">Command Palette</span><span class="marquee-item">3 Themes</span><span class="marquee-item">Offline-first</span>
-  </div>
-</div>
+<section class="ed" id="how"><div class="wrap">
+ <div class="top">
+  <h2>Designed to help you study more <span class="serif">with less stress.</span></h2>
+  <p>Student OS is for anyone juggling classes, exams and self-study who wants one calm place to run all of it.</p>
+ </div>
+ <div class="feat">
+  <div><h3>Smart planner</h3><p>Plan My Day, move tasks when plans change, and get recovery suggestions after a missed session. Sleep settings keep the schedule honest.</p></div>
+  <div><h3>Focus timer with Deep Lock</h3><p>Start a focus block of 30 to 120 minutes. Deep Lock is optional and blocks the apps you choose while the timer runs.</p></div>
+  <div><h3>Routines and streaks</h3><p>Morning study, exercise, review notes. Check habits off daily and watch your best streak grow.</p></div>
+ </div>
+</div></section>
 
-<!-- ═══ STATS ═══ -->
-<section class="stats">
-  <div class="container"><div class="stats-grid">
-    <div class="stat-cell reveal"><div class="stat-big" data-count="6">0</div><div class="stat-cap">Core modules</div></div>
-    <div class="stat-cell reveal reveal-d1"><div class="stat-big" data-count="3">0</div><div class="stat-cap">Themes</div></div>
-    <div class="stat-cell reveal reveal-d2"><div class="stat-big" data-count="0">0</div><div class="stat-cap">Accounts needed</div></div>
-    <div class="stat-cell reveal reveal-d3"><div class="stat-big" data-count="100" data-suffix="%">0</div><div class="stat-cap">On-device</div></div>
-  </div></div>
+<section class="aur">
+ <h2>Start a session and <span class="serif">the phone goes quiet.</span></h2>
+ <div class="stagebox">
+  <div class="chip" style="left:2%;top:90px">XP<b>54</b></div>
+  <div class="chip" style="right:2%;top:190px">Best streak<b>21 days</b></div>
+  <div class="chip" style="left:6%;top:330px">Deep Lock<b>90 Excellent</b></div>
+  <div class="ph"><div class="scr"><small>Deep work</small><div class="ring"><b>02:00:00</b></div><small>Deep Lock is on. Distracting apps are blocked.</small></div></div>
+ </div>
 </section>
 
-<!-- ═══ FEATURE GRID → links to every tab ═══ -->
-<section class="features container" id="features">
-  <div class="section-head reveal">
-    <div class="eyebrow center-eyebrow">Everything in one place</div>
-    <h2>One calm workspace.<br>Every study tool you need.</h2>
-    <p>Six modules, each with its own room on this site. Open any tab to explore it in 3D.</p>
-  </div>
-  <div class="feature-grid">
-    <a class="fcard reveal" href="focus.html"><span class="spot"></span><span class="f-tag">01</span><div class="f-ico">⏱️</div><h3>Focus</h3><p>A drift-free deep-work timer with an ambient breathing knot — the same 3D object that lives inside the app.</p><span class="f-link">Open Focus →</span></a>
-    <a class="fcard reveal reveal-d1" href="tasks.html"><span class="spot"></span><span class="f-tag">02</span><div class="f-ico">✅</div><h3>Tasks</h3><p>List & kanban views, priorities, subjects, due dates and subtasks — completed work earns XP.</p><span class="f-link">Open Tasks →</span></a>
-    <a class="fcard reveal reveal-d2" href="habits.html"><span class="spot"></span><span class="f-tag">03</span><div class="f-ico">🔥</div><h3>Habits</h3><p>A weekly grid with streak mechanics and celebration animations that make consistency visible.</p><span class="f-link">Open Habits →</span></a>
-    <a class="fcard reveal" href="planner.html"><span class="spot"></span><span class="f-tag">04</span><div class="f-ico">📅</div><h3>Planner</h3><p>Month, week and day views with exam countdowns and colour-coded study blocks.</p><span class="f-link">Open Planner →</span></a>
-    <a class="fcard reveal reveal-d1" href="analytics.html"><span class="spot"></span><span class="f-tag">05</span><div class="f-ico">📊</div><h3>Analytics</h3><p>Focus trends, subject breakdown and productivity insights — see where your hours actually went.</p><span class="f-link">Open Analytics →</span></a>
-    <a class="fcard reveal reveal-d2" href="privacy.html"><span class="spot"></span><span class="f-tag">06</span><div class="f-ico">🛡️</div><h3>Privacy</h3><p>Deep Lock Focus Shield, zero cloud, zero trackers. Your data never leaves your device.</p><span class="f-link">Open Privacy →</span></a>
-  </div>
-</section>
+<section class="band"><div class="wrap g">
+ <div><h2>See where your hours <span class="serif">actually go.</span></h2><p>Insights show your weekly study time, how it splits across subjects, and which days you slip, so next week's plan starts from the truth.</p></div>
+ <div class="glass">
+  <div><div class="wk" id="wk"></div><div class="wkl"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div></div>
+  <div><div class="donut"></div><div class="lg">Physics<br>Maths<br>Chemistry</div></div>
+  <div class="note">Illustrative data</div>
+ </div>
+</div></section>
 
-<!-- ═══ VIDEO WALKTHROUGH ═══ -->
-<section class="video-hero">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="eyebrow center-eyebrow">Video walkthrough</div>
-      <h2>The whole OS,<br>in 60 seconds.</h2>
-      <p>A guided tour through every module — no install needed to watch.</p>
-    </div>
-    <div class="video-frame reveal-zoom" role="button" tabindex="0" aria-label="Play the app walkthrough">
-      <div class="video-screen">
-        <div class="video-scan" aria-hidden="true"></div>
-        <div class="video-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <div class="video-dur">▶ 1:00 · GUIDED TOUR</div>
-        <div class="vd-phone"><div class="phone" style="--pglow:rgba(138,99,245,.6)"><div data-screen="dashboard"></div></div></div>
-        <div class="vd-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4.5v15l13-7.5z"/></svg></div>
-      </div>
-    </div>
-    <div class="video-cap">Click the frame — <b>opens the full guided tour</b></div>
-  </div>
-</section>
+<section class="priv"><div class="wrap">
+ <h2>Your study data <span class="serif">stays on your phone.</span></h2>
+ <div class="pl">
+  <div><h3>No account to create</h3><p>Open the app and start. Nothing to sign up for.</p></div>
+  <div><h3>No ads</h3><p>Nothing competes with your attention while you study.</p></div>
+  <div><h3>No third-party trackers</h3><p>Your habits are not sold or shared.</p></div>
+  <div><h3>No cloud storage</h3><p>Plans, routines and focus history are kept on-device.</p></div>
+ </div>
+ <div class="src">As declared in the Data safety section on Google Play.</div>
+</div></section>
 
-<div class="container" style="padding:30px 0 0"><div class="sect-wave" aria-hidden="true"></div></div>
-
-<!-- ═══ 3D SCROLL STORY — the phone turns as you read ═══ -->
-<section class="story" id="story">
-  <div class="story-sticky">
-    <div class="story-copy">
-      <div class="eyebrow">Scroll to explore</div>
-      <h2>The whole OS,<br><span class="grad">turning in 3D.</span></h2>
-      <p>Keep scrolling — the device rotates through the workspace while each module steps forward.</p>
-      <div class="story-steps">
-        <div class="sstep on"><b>01 · Focus</b><span>A breathing 3D knot anchors every session.</span></div>
-        <div class="sstep"><b>02 · Plan</b><span>Exams, timetable and tasks on one timeline.</span></div>
-        <div class="sstep"><b>03 · Track</b><span>Streaks and trends that make progress obvious.</span></div>
-      </div>
-    </div>
-    <div class="story-stage">
-      <div class="story-orbit so1" aria-hidden="true"></div>
-      <div class="story-orbit so2" aria-hidden="true"></div>
-      <div class="story-glow" aria-hidden="true"></div>
-      <div class="story-phone" id="storyPhone">
-        <div class="phone" style="--pglow:rgba(125,140,255,.55)">
-          <div data-screen="focus" id="storyScreen"></div>
-        </div>
-      </div>
-      <div class="story-badge sb1">⏱ Deep Work</div>
-      <div class="story-badge sb2">🔥 21-day streak</div>
-      <div class="story-badge sb3">📊 +38% focus</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ 3D SCREENS RING — every screen from the app ═══ -->
-<section class="gallery-3d" id="gallery">
-  <div class="ring-sticky">
-    <div class="section-head" style="margin-bottom:30px">
-      <div class="eyebrow center-eyebrow">Keep scrolling</div>
-      <h2>Every screen,<br>spinning in 3D.</h2>
-    </div>
-    <div class="ring-persp">
-      <div class="ring">
-        <div class="ring-item" style="--a:0deg;--z:360px"><div class="phone"><div data-screen="dashboard"></div></div></div>
-        <div class="ring-item" style="--a:36deg;--z:360px"><div class="phone"><div data-screen="focus"></div></div></div>
-        <div class="ring-item" style="--a:72deg;--z:360px"><div class="phone"><div data-screen="tasks"></div></div></div>
-        <div class="ring-item" style="--a:108deg;--z:360px"><div class="phone"><div data-screen="kanban"></div></div></div>
-        <div class="ring-item" style="--a:144deg;--z:360px"><div class="phone"><div data-screen="habits"></div></div></div>
-        <div class="ring-item" style="--a:180deg;--z:360px"><div class="phone"><div data-screen="month"></div></div></div>
-        <div class="ring-item" style="--a:216deg;--z:360px"><div class="phone"><div data-screen="week"></div></div></div>
-        <div class="ring-item" style="--a:252deg;--z:360px"><div class="phone"><div data-screen="analytics"></div></div></div>
-        <div class="ring-item" style="--a:288deg;--z:360px"><div class="phone"><div data-screen="deeplock"></div></div></div>
-        <div class="ring-item" style="--a:324deg;--z:360px"><div class="phone"><div data-screen="settings"></div></div></div>
-      </div>
-    </div>
-    <div class="ring-hint">scroll to spin the carousel</div>
-  </div>
-</section>
-
-<!-- ═══ CTA ═══ -->
 <section class="cta">
-  <div class="cta-glow"></div>
-  <div class="cta-content">
-    <div class="eyebrow center-eyebrow">Show up, every day</div>
-    <h2>Build better<br><span class="grad">study habits.</span></h2>
-    <p>Student OS helps you focus, organize and grow — every single day.</p>
-    <div class="btn-row" style="justify-content:center">
-      <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">
-        <img style="height:52px" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
-      </a>
-      <a class="btn btn-ghost" href="https://github.com/jainam6610/student-os/releases/latest" target="_blank" rel="noopener">Download APK</a>
-      <a class="btn btn-ghost" href="https://github.com/jainam6610/student-os" target="_blank" rel="noopener">★ GitHub</a>
-    </div>
-  </div>
+ <h2>Build better <span class="serif">study habits.</span></h2>
+ <a class="btn" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get it on Google Play</a>
+ <a class="btn ghost" href="https://studentos-privacy-hub.lovable.app">Read the privacy policy</a>
 </section>
+</main>
+<footer>
+ <span>Student OS, an Android app by Thats.Jainam.</span>
+ <span><a href="focus.html">Focus</a> · <a href="tasks.html">Tasks</a> · <a href="habits.html">Habits</a> · <a href="planner.html">Planner</a> · <a href="analytics.html">Analytics</a> · <a href="privacy.html">Privacy</a></span>
+ <span><a href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Free on Google Play</a></span>
+</footer>
 
-</div><!-- /page -->
+<script>
+(function(){
+var W=1000,H=600,D=4000,TS=200;
+var tun=document.getElementById('tunnel'),stage=document.getElementById('stage'),hero=document.getElementById('hero');
+var cam=stage.parentNode,c1=document.getElementById('c1'),c2=document.getElementById('c2'),hint=document.querySelector('.hint');
+var seed=7;function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647}
+var T=[
+ function(){return '<div class="c" style="background:#12332f;color:#a6f5e8"><small>Deep work</small><b>02:00:00</b></div>'},
+ function(){return '<div class="c" style="background:#fff"><small>Today</small><div><div class="r"><span style="background:#5b5bf0"></span><em></em></div><div class="r"><span style="background:#17b3a1"></span><em></em></div><div class="r"><span style="background:#ff9b62"></span><em></em></div></div></div>'},
+ function(){return '<div class="c" style="background:#eadcff;color:#3b1d73"><small>Routines</small><div><b>21</b><br><i>day best streak</i></div></div>'},
+ function(){return '<div class="c" style="background:#e4e8ff"><small>This week</small><div class="bars"><span style="height:40%"></span><span style="height:70%"></span><span style="height:55%"></span><span style="height:90%"></span><span style="height:35%"></span></div></div>'},
+ function(){return '<div class="c" style="background:#17161f;color:#fff"><small>Deep Lock</small><div><b>90</b><br><i style="color:#7fe3d6">Excellent</i></div></div>'},
+ function(){return '<div class="c" style="background:linear-gradient(135deg,#5b5bf0,#9b64f2);color:#fff"><small>Your goal</small><b style="font-size:24px">JEE Warrior</b></div>'},
+ function(){return '<div class="c" style="background:#ffe6d6;color:#6b2f10"><small>Level up</small><b>54 XP</b></div>'}
+];
+var G=[
+ function(){return '<div class="c amb" style="background:#e4e8ff"><div class="bars"><span style="height:40%"></span><span style="height:70%"></span><span style="height:55%"></span><span style="height:90%"></span><span style="height:35%"></span></div></div>'},
+ function(){return '<div class="c amb" style="background:#fff"><div class="dots"><span class="on"></span><span></span><span></span><span></span><span class="on"></span><span></span><span></span><span></span><span class="on"></span></div></div>'},
+ function(){return '<div class="c amb" style="background:#f0efff"><div class="rows"><span style="--w:72%"></span><span style="--w:48%"></span><span style="--w:86%"></span></div></div>'},
+ function(){return '<div class="c amb" style="background:#e6faf6"><div class="bars"><span style="height:30%;background:#17b3a1"></span><span style="height:62%;background:#17b3a1"></span><span style="height:80%;background:#17b3a1"></span><span style="height:52%;background:#17b3a1"></span><span style="height:94%;background:#17b3a1"></span></div></div>'},
+ function(){return '<div class="c amb" style="background:#ffe6d6"><div class="dots"><span></span><span class="on"></span><span></span><span class="on"></span><span></span><span></span></div></div>'}
+];
+function wall(w,h,tf,fill,pool){
+ var d=document.createElement('div');d.className='wall';
+ d.style.cssText='width:'+w+'px;height:'+h+'px;left:'+(-w/2)+'px;top:'+(-h/2)+'px;transform:'+tf;
+ var n=(w/TS)*(h/TS),s='';
+ for(var i=0;i<n;i++){s+='<div class="t">'+(rnd()<fill?pool[Math.floor(rnd()*pool.length)]():'<div class="e"></div>')+'</div>'}
+ d.innerHTML=s;tun.appendChild(d);
+}
+wall(D,H,'translateX('+(-W/2)+'px) rotateY(90deg)',.6,T);
+wall(D,H,'translateX('+(W/2)+'px) rotateY(-90deg)',.6,T);
+wall(W,D,'translateY('+(H/2)+'px) rotateX(90deg)',.5,T);
+wall(W,D,'translateY('+(-H/2)+'px) rotateX(90deg) rotateZ(180deg)',.4,G);
 
-<div class="vignette" aria-hidden="true"></div>
-<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
-<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+var wk=document.getElementById('wk');
+[45,70,55,85,40,95,60].forEach(function(h){var s=document.createElement('span');s.style.height=h+'%';wk.appendChild(s)});
 
-<script src="assets/main.js" defer></script>
+function cl(x){return Math.max(0,Math.min(1,x))}
+function sm(a,b,x){var t=cl((x-a)/(b-a));return t*t*(3-2*t)}
+var mq=matchMedia('(prefers-reduced-motion: reduce)');
+var tgt=0,cur=0,mx=0,my=0,cmx=0,cmy=0,raf=0,running=false,onScreen=true;
+function prog(){var r=hero.getBoundingClientRect();var span=hero.offsetHeight-innerHeight;return span>0?cl(-r.top/span):0}
+function op(el,v){v=Math.round(v*1000)/1000;if(el.__o!==v){el.__o=v;el.style.opacity=v}}
+function tr(el,v){if(el.__t!==v){el.__t=v;el.style.transform=v}}
+function render(){
+ var p=cur,mobile=innerWidth<820,z0=mobile?-1390:-1700;
+ tr(tun,'translateZ('+Math.round(z0+p*(900-z0))+'px)');
+ var s=Math.min(1,Math.max(.55,innerWidth/1100));
+ tr(stage,'scale('+s+') rotateX('+(cmy*-3).toFixed(2)+'deg) rotateY('+(cmx*4).toFixed(2)+'deg)');
+ var a=sm(.03,.22,p);
+ op(c1,1-a);
+ tr(c1,'translateY(calc(-50% - '+Math.round(a*40)+'px)) scale('+(1+a*.06).toFixed(3)+')');
+ c1.style.pointerEvents=p<.12?'auto':'none';
+ op(c2,sm(.28,.42,p)*(1-sm(.86,.96,p)));
+ op(cam,1-sm(.90,1,p));
+ op(hint,1-sm(.02,.10,p));
+}
+function frame(){
+ cur+=(tgt-cur)*.09;cmx+=(mx-cmx)*.06;cmy+=(my-cmy)*.06;
+ render();
+ if(running)raf=requestAnimationFrame(frame);
+}
+function start(){if(running||mq.matches||!onScreen||document.hidden)return;running=true;raf=requestAnimationFrame(frame)}
+function stop(){running=false;cancelAnimationFrame(raf)}
+function staticFrame(){cur=0;tgt=0;cmx=0;cmy=0;render()}
+function sync(){
+ if(mq.matches){stop();staticFrame()}
+ else{tgt=cur=prog();start()}
+}
+addEventListener('scroll',function(){tgt=prog()},{passive:true});
+addEventListener('pointermove',function(e){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5},{passive:true});
+document.addEventListener('visibilitychange',function(){document.hidden?stop():start()});
+if('IntersectionObserver' in window){
+ new IntersectionObserver(function(es){var v=es[0].isIntersecting;if(v&&!onScreen){cur=tgt=prog()}onScreen=v;onScreen?start():stop()},{threshold:0}).observe(hero);
+}
+if(mq.addEventListener)mq.addEventListener('change',sync);else if(mq.addListener)mq.addListener(sync);
+sync();
+})();
+
+/* 3d gallery */
+(function(){
+var gal=document.getElementById('gallery');
+if(!gal)return;
+var track=document.getElementById('gal-track'),cards=[].slice.call(track.children),n=cards.length;
+var nameEl=document.getElementById('gal-name'),countEl=document.getElementById('gal-count'),railEl=document.getElementById('gal-rail');
+var names=cards.map(function(c){return c.getAttribute('data-name')||''});
+var mq=matchMedia('(prefers-reduced-motion: reduce)');
+var target=0,cur=0,mx=0,my=0,cmx=0,cmy=0,idx=-1,raf=0,running=false,onScreen=false,reduce=false;
+
+function cl(x){return Math.max(0,Math.min(1,x))}
+function sm(a,b,x){var t=cl((x-a)/(b-a));return t*t*(3-2*t)}
+function prog(){var r=gal.getBoundingClientRect();var span=gal.offsetHeight-innerHeight;return span>0?cl(-r.top/span):0}
+function label(i){
+ i=Math.max(0,Math.min(n-1,i));
+ if(i===idx)return;
+ idx=i;
+ nameEl.textContent=names[i];
+ countEl.textContent=('0'+(i+1)).slice(-2)+' / '+('0'+n).slice(-2);
+}
+function paint(){
+ var mobile=innerWidth<820;
+ var cw=cards[0].offsetWidth||190;
+ var spread=Math.max(84,Math.min(230,cw*(mobile?.62:.88)));
+ var rot=mobile?19:20;
+ var yBase=mobile?5:7;
+ var half=n/2;
+ var a=cur*(n-1);
+ var t='rotateX('+(cmy*-3.5).toFixed(2)+'deg) rotateY('+(cmx*5).toFixed(2)+'deg)';
+ if(track.__t!==t){track.__t=t;track.style.transform=t}
+ for(var i=0;i<n;i++){
+  var el=cards[i];
+  var d=(((i-a+half)%n)+n)%n-half,ad=Math.abs(d);
+  var x=Math.round(d*spread),y=Math.round(ad*yBase),z=Math.round(-ad*(mobile?110:135));
+  var ry=Math.max(-42,Math.min(42,d*rot));
+  var s=1-ad*.012;
+  var tr='translate(-50%,-50%) translate3d('+x+'px,'+y+'px,'+z+'px) rotateY('+ry.toFixed(1)+'deg) scale('+s.toFixed(3)+')';
+  if(el.__t!==tr){el.__t=tr;el.style.transform=tr}
+  var o=+(1-sm(mobile?1.25:1.7,mobile?2.1:3,ad)).toFixed(3);
+  if(el.__o!==o){el.__o=o;el.style.opacity=o}
+  var zi=Math.round(100-ad*10);
+  if(el.__z!==zi){el.__z=zi;el.style.zIndex=zi}
+ }
+ label(Math.round(a));
+ var rw=+(cur*100).toFixed(2);
+ if(railEl.__w!==rw){railEl.__w=rw;railEl.style.width=rw+'%'}
+}
+function resetMotion(){
+ track.style.transform='';track.__t=null;
+ for(var i=0;i<n;i++){
+  var el=cards[i];
+  el.style.transform='';el.style.opacity='';el.style.zIndex='';
+  el.__t=null;el.__o=null;el.__z=null;
+ }
+ railEl.style.width='';railEl.__w=null;
+}
+function nearCard(){
+ var mid=track.getBoundingClientRect().left+track.clientWidth/2,best=0,bd=1e9;
+ for(var i=0;i<n;i++){
+  var r=cards[i].getBoundingClientRect();
+  var dd=Math.abs(r.left+r.width/2-mid);
+  if(dd<bd){bd=dd;best=i}
+ }
+ label(best);
+}
+function frame(){
+ cur+=(target-cur)*.14;
+ cmx+=(mx-cmx)*.06;cmy+=(my-cmy)*.06;
+ paint();
+ if(running)raf=requestAnimationFrame(frame);
+}
+function start(){if(running||reduce||!onScreen||document.hidden)return;running=true;raf=requestAnimationFrame(frame)}
+function stop(){running=false;cancelAnimationFrame(raf)}
+function sync(){
+ if(mq.matches){
+  reduce=true;stop();
+  target=cur=0;mx=my=cmx=cmy=0;
+  resetMotion();nearCard();
+ }else{
+  reduce=false;target=cur=prog();start();
+ }
+}
+addEventListener('scroll',function(){if(!reduce)target=prog()},{passive:true});
+addEventListener('pointermove',function(e){
+ if(reduce||e.pointerType==='touch')return;
+ mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;
+ start();
+},{passive:true});
+addEventListener('resize',function(){
+ if(reduce){nearCard();return}
+ if(!running){target=cur=prog();paint()}
+},{passive:true});
+track.addEventListener('scroll',function(){
+ if(!reduce||track.__raf)return;
+ track.__raf=requestAnimationFrame(function(){track.__raf=0;nearCard()});
+},{passive:true});
+document.addEventListener('visibilitychange',function(){document.hidden?stop():start()});
+if('IntersectionObserver' in window){
+ new IntersectionObserver(function(es){
+  var v=es[0].isIntersecting;
+  if(v&&!onScreen){target=cur=prog()}
+  onScreen=v;onScreen?start():stop();
+ },{threshold:0}).observe(gal);
+}
+if(mq.addEventListener)mq.addEventListener('change',sync);else if(mq.addListener)mq.addListener(sync);
+sync();
+})();
+</script>
 </body>
 </html>
