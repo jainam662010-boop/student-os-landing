@@ -1,144 +1,206 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Privacy — Student OS</title>
 <meta name="description" content="Student OS privacy: no account, no ads, no cloud. Your study data stays on your device, and Deep Lock never reads your screen.">
-<meta name="theme-color" content="#0a0a14">
+<meta name="theme-color" content="#f6f5fa">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 </head>
-<body data-page="privacy.html">
+<body data-page="privacy">
+<a class="skip" href="#main">Skip to content</a>
 
-<div class="wipe" id="wipe" aria-hidden="true">
-  <div class="wipe-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></div>
-</div>
-
-<div class="progress" id="progress"></div>
-<div class="ambient" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="grid-overlay" aria-hidden="true"></div>
-
-<nav class="topnav" id="topnav">
+<nav class="nav" id="siteNav" aria-label="Primary">
   <a class="brand" href="index.html">
-    <span class="brand-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></span>
-    Student OS
+    <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+    <span>Student OS</span>
   </a>
   <div class="nav-links">
-    <a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
+    <a href="focus.html" data-nav="focus">Focus</a>
+    <a href="tasks.html" data-nav="tasks">Tasks</a>
+    <a href="habits.html" data-nav="habits">Habits</a>
+    <a href="planner.html" data-nav="planner">Planner</a>
+    <a href="analytics.html" data-nav="analytics">Analytics</a>
+    <a href="privacy.html" data-nav="privacy">Privacy</a>
   </div>
-  <div class="nav-right">
-    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-    <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
-  </div>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+  <button class="burger" id="navBurger" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"><span></span><span></span><span></span></button>
 </nav>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Home</a><a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
-  <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener" style="color:var(--accent-soft)">Get the app →</a>
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <a href="index.html">Home</a>
+  <a href="focus.html" data-mnav="focus">Focus</a>
+  <a href="tasks.html" data-mnav="tasks">Tasks</a>
+  <a href="habits.html" data-mnav="habits">Habits</a>
+  <a href="planner.html" data-mnav="planner">Planner</a>
+  <a href="analytics.html" data-mnav="analytics">Analytics</a>
+  <a href="privacy.html" data-mnav="privacy">Privacy</a>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
 </div>
 
-<div class="page">
+<div class="page-progress" aria-hidden="true"><i id="pageProgress"></i></div>
 
-<!-- ═══ HERO ═══ -->
-<section class="mod-hero">
-  <div class="mod-hero-copy">
-    <div class="chip"><span class="pulse-dot"></span> Module 06 · Privacy</div>
-    <h1>Your data stays<br><span class="grad-green">on your device.</span></h1>
-    <p class="sub">No sign-up, no cloud sync, nobody watching. Student OS was built so your study data never has to leave your phone.</p>
-    <div class="btn-row" style="margin-top:26px">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-      <a class="btn btn-ghost" href="https://studentos-privacy-hub.lovable.app" target="_blank" rel="noopener">Privacy policy ↗</a>
-    </div>
-  </div>
-  <div class="mock-stage">
-    <div class="mock-tilt" id="mockTilt">
-      <div class="phone" style="--pglow:rgba(62,207,142,.4)"><div data-screen="settings"></div></div>
-      <div class="floater fl1"><span class="f-ic">🚫</span> No account</div>
-      <div class="floater fl2"><span class="f-ic">📵</span> No ads, ever</div>
-      <div class="floater fl3"><span class="f-ic">☁️</span> No cloud</div>
-      <div class="floater fl4"><span class="f-ic">🔒</span> On-device</div>
-    </div>
-  </div>
-</section>
+<main id="main">
 
-<!-- ═══ WHAT WE COLLECT ═══ -->
-<section class="container" style="padding:70px 0">
-  <div class="section-head reveal">
-    <div class="eyebrow center-eyebrow">The list</div>
-    <h2>What we collect from you.</h2>
-  </div>
-  <div class="reveal" style="max-width:640px;margin:0 auto;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:22px;padding:10px 28px">
-    <div class="why-row"><b>Focus sessions</b><span>stored on your phone only</span><span class="no">NO UPLOAD</span></div>
-    <div class="why-row"><b>Tasks & notes</b><span>local storage only</span><span class="no">NO UPLOAD</span></div>
-    <div class="why-row"><b>Habits & streaks</b><span>local storage only</span><span class="no">NO UPLOAD</span></div>
-    <div class="why-row"><b>Usage patterns</b><span>not collected — nothing "phones home"</span><span class="no">NO UPLOAD</span></div>
-    <div class="why-row"><b>Advertising</b><span>none, now or ever</span><span class="no">NO ADS SDK</span></div>
-    <div class="why-row" style="border-bottom:0"><b>Deep Lock reader</b><span>shield detects apps, never screen content</span><span class="no">NO CONTENT ACCESS</span></div>
-  </div>
-</section>
-
-<!-- ═══ SHIELD WORLD ═══ -->
-<section class="world reverse">
-  <div class="container"><div class="world-inner reverse">
-    <div class="world-text reveal">
-      <div class="eyebrow">Deep Lock</div>
-      <h2>A shield, not<br>a surveillance app.</h2>
-      <p>The Focus Shield watches for app exits during sessions and brings you back. It never reads screen content, messages, passwords or typed text — by design.</p>
-      <div class="pbadges" style="margin-top:10px">
-        <div class="pb"><div class="ic">🚫</div><div><b>No account</b><span>just open & start</span></div></div>
-        <div class="pb"><div class="ic">📵</div><div><b>No ads, ever</b><span>and no trackers</span></div></div>
-        <div class="pb"><div class="ic">☁️</div><div><b>No cloud</b><span>stored locally</span></div></div>
-        <div class="pb"><div class="ic">🔒</div><div><b>On-device</b><span>nothing shared</span></div></div>
+  <!-- ═══ hero ═══ -->
+  <header class="page-hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Module 06 · Privacy</p>
+        <h1>Your data stays<br><span class="serif">on your device.</span></h1>
+        <p class="lede">No sign-up, no cloud sync, nobody watching. Student OS was built so your study data never has to leave your phone.</p>
+        <ul class="checklist">
+          <li><span><b>No account</b> — open the app and start</span></li>
+          <li><span><b>No ads and no trackers</b>, ever</span></li>
+          <li><span><b>No cloud</b> — plans, routines and history stay local</span></li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn" href="https://studentos-privacy-hub.lovable.app" target="_blank" rel="noopener">Read the privacy policy</a>
+          <a class="btn ghost" href="https://github.com/jainam6610/student-os/releases/latest" target="_blank" rel="noopener">Download the APK</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <figure class="phone-frame tilt">
+          <img src="assets/gallery/splash.webp" width="534" height="1170" alt="Student OS welcome screen with no sign-up required" loading="eager" decoding="async">
+        </figure>
+        <div class="float-chip fc1">Account needed<b>None</b></div>
+        <div class="float-chip fc2">Ads served<b>Zero</b></div>
+        <div class="float-chip fc3">Data uploaded<b>None</b></div>
       </div>
     </div>
-    <div class="stage3d">
-      <div class="scene3d"><div class="id3d reveal-zoom">
-        <div class="shield">🛡️</div>
-      </div></div>
-      <div class="float-stat fs1" style="position:absolute;top:10%;left:6%">🔒 Zero content access</div>
-      <div class="float-stat fs2" style="position:absolute;bottom:10%;right:6%">📡 Zero network calls</div>
+  </header>
+
+  <!-- ═══ data table ═══ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">The list</p>
+        <h2>What we collect <span class="serif">from you.</span></h2>
+        <p>A short list, because there is almost nothing to collect.</p>
+      </div>
+      <div class="data-table reveal">
+        <div class="drow"><b>Focus sessions</b><span>Stored on your phone only</span><em>No upload</em></div>
+        <div class="drow"><b>Tasks and notes</b><span>Local storage only</span><em>No upload</em></div>
+        <div class="drow"><b>Habits and streaks</b><span>Local storage only</span><em>No upload</em></div>
+        <div class="drow"><b>Usage patterns</b><span>Not collected — nothing phones home</span><em>No upload</em></div>
+        <div class="drow"><b>Advertising</b><span>None, now or ever</span><em>No ads SDK</em></div>
+        <div class="drow"><b>Deep Lock reader</b><span>Detects apps, never screen content</span><em>No content access</em></div>
+      </div>
+      <p class="center reveal" style="margin-top:18px;font-size:12.5px;color:var(--muted)">As declared in the Data safety section on Google Play.</p>
     </div>
-  </div></div>
-</section>
+  </section>
 
-<!-- ═══ FAQ ═══ -->
-<section class="faq-wrap container" id="faq">
-  <div class="section-head reveal">
-    <div class="eyebrow center-eyebrow">Questions</div>
-    <h2>Good to know.</h2>
-  </div>
-  <div class="reveal">
-    <div class="faq-item"><button class="faq-q">Is Student OS free?<span class="faq-pm">+</span></button><div class="faq-a"><p>Yes — Student OS is free to download on Google Play, with no ads and no account required. It's also open source on GitHub.</p></div></div>
-    <div class="faq-item"><button class="faq-q">Do I need to create an account?<span class="faq-pm">+</span></button><div class="faq-a"><p>No. Everything is stored locally on your device. There's no sign-up, no cloud and no tracking — your data never leaves your phone.</p></div></div>
-    <div class="faq-item"><button class="faq-q">Does it work offline?<span class="faq-pm">+</span></button><div class="faq-a"><p>Completely. Student OS is offline-first. The web version is an installable PWA, and the Android app works fully without a connection.</p></div></div>
-    <div class="faq-item"><button class="faq-q">What is Deep Lock?<span class="faq-pm">+</span></button><div class="faq-a"><p>Deep Lock is the Android Focus Shield. During a focus session it detects distracting apps and nudges you back. It never reads screen content, messages, passwords or typed text.</p></div></div>
-    <div class="faq-item"><button class="faq-q">Where can I get it / contribute?<span class="faq-pm">+</span></button><div class="faq-a"><p>Install from Google Play, or grab the APK from the GitHub releases. The source is MIT-licensed and contributions are welcome.</p></div></div>
-  </div>
-</section>
+  <!-- ═══ shield ═══ -->
+  <section class="section white">
+    <div class="wrap split reverse">
+      <div class="split-copy reveal">
+        <p class="eyebrow">Deep Lock</p>
+        <h2>A shield, not <span class="serif">a surveillance app.</span></h2>
+        <p>The Focus Shield notices when you leave a session and brings you back. It never reads screen content, messages, passwords or typed text — by design, not by promise alone.</p>
+        <ul class="checklist">
+          <li><span><b>Zero content access</b> — only app-level detection</span></li>
+          <li><span><b>Zero network calls</b> during a session</span></li>
+          <li><span><b>You control</b> every permission and every blocked app</span></li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn ghost" href="https://github.com/jainam6610/student-os">Read the source on GitHub</a>
+        </div>
+      </div>
+      <div class="visual reveal" data-delay="1">
+        <div class="panel center">
+          <div class="lock-badge"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg></div>
+          <h3>Focus Shield</h3>
+          <p class="mt" style="color:var(--ink-soft);font-size:14.5px">Permission-based, session-only, on-device.</p>
+          <div class="lock-stats">
+            <div class="lock-stat"><b>0</b><span>Screen reads</span></div>
+            <div class="lock-stat"><b>0</b><span>Trackers</span></div>
+            <div class="lock-stat"><b>0</b><span>Uploads</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- ═══ CTA ═══ -->
-<section class="cta">
-  <div class="cta-glow"></div>
-  <div class="cta-content reveal">
-    <div class="eyebrow center-eyebrow">Private by default</div>
-    <h2>Nobody sees your<br><span class="grad">study data. Ever.</span></h2>
-    <div class="btn-row" style="justify-content:center">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get on Google Play</a>
-      <a class="btn btn-ghost" href="https://github.com/jainam6610/student-os/releases/latest" target="_blank" rel="noopener">Download APK</a>
+  <!-- ═══ FAQ ═══ -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Questions</p>
+        <h2>Good to <span class="serif">know.</span></h2>
+      </div>
+      <div class="faq reveal">
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-1">Is Student OS free?<span class="pm" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-1" hidden><p>Yes — Student OS is free to download on Google Play, with no ads and no account required. It is also open source on GitHub.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-2">Do I need to create an account?<span class="pm" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-2" hidden><p>No. Everything is stored locally on your device. There is no sign-up, no cloud and no tracking — your data never leaves your phone.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-3">Does it work offline?<span class="pm" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-3" hidden><p>Completely. Student OS is offline-first. The Android app works fully without a connection, and the web version is a static site that loads from cache.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-4">What is Deep Lock?<span class="pm" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-4" hidden><p>Deep Lock is the Android Focus Shield. During a focus session it detects distracting apps and nudges you back. It never reads screen content, messages, passwords or typed text.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-5">Where can I get it or contribute?<span class="pm" aria-hidden="true">+</span></button>
+          <div class="faq-a" id="faq-5" hidden><p>Install from Google Play, or grab the APK from the GitHub releases. The source is MIT-licensed and contributions are welcome.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-wrap">
+    <div class="wrap">
+      <div class="cta-card reveal">
+        <p class="eyebrow">Private by default</p>
+        <h2>Nobody sees your<br><span class="serif">study data. Ever.</span></h2>
+        <div class="btn-row">
+          <a class="btn light" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get on Google Play</a>
+          <a class="btn ghost" href="https://github.com/jainam6610/student-os/releases/latest" target="_blank" rel="noopener">Download APK</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a class="foot-brand" href="index.html">
+          <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+          <span>Student OS</span>
+        </a>
+        <p class="foot-note">Plan the day, lock in your focus and keep your streak. Free on Android, no account, no ads.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="focus.html">Focus</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="habits.html">Habits</a>
+        <a href="planner.html">Planner</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Student OS · MIT licensed</span>
+      <span><a href="https://github.com/jainam6610/student-os">Source</a> · <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Google Play</a></span>
     </div>
   </div>
-</section>
+</footer>
 
-</div><!-- /page -->
-
-<div class="vignette" aria-hidden="true"></div>
-<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
-<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-<script src="assets/main.js" defer></script>
+<button class="back-top" id="backTop" type="button" aria-label="Back to top">↑</button>
+<script src="assets/site.js" defer></script>
 </body>
 </html>

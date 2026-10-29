@@ -1,124 +1,193 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Planner — Student OS</title>
 <meta name="description" content="Study planner in Student OS: month, week and day views with exam countdowns and colour-coded study blocks.">
-<meta name="theme-color" content="#0a0a14">
+<meta name="theme-color" content="#f6f5fa">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 </head>
-<body data-page="planner.html">
+<body data-page="planner">
+<a class="skip" href="#main">Skip to content</a>
 
-<div class="wipe" id="wipe" aria-hidden="true">
-  <div class="wipe-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></div>
-</div>
-
-<div class="progress" id="progress"></div>
-<div class="ambient" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="grid-overlay" aria-hidden="true"></div>
-
-<nav class="topnav" id="topnav">
+<nav class="nav" id="siteNav" aria-label="Primary">
   <a class="brand" href="index.html">
-    <span class="brand-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></span>
-    Student OS
+    <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+    <span>Student OS</span>
   </a>
   <div class="nav-links">
-    <a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
+    <a href="focus.html" data-nav="focus">Focus</a>
+    <a href="tasks.html" data-nav="tasks">Tasks</a>
+    <a href="habits.html" data-nav="habits">Habits</a>
+    <a href="planner.html" data-nav="planner">Planner</a>
+    <a href="analytics.html" data-nav="analytics">Analytics</a>
+    <a href="privacy.html" data-nav="privacy">Privacy</a>
   </div>
-  <div class="nav-right">
-    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-    <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
-  </div>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+  <button class="burger" id="navBurger" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"><span></span><span></span><span></span></button>
 </nav>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Home</a><a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
-  <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener" style="color:var(--accent-soft)">Get the app →</a>
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <a href="index.html">Home</a>
+  <a href="focus.html" data-mnav="focus">Focus</a>
+  <a href="tasks.html" data-mnav="tasks">Tasks</a>
+  <a href="habits.html" data-mnav="habits">Habits</a>
+  <a href="planner.html" data-mnav="planner">Planner</a>
+  <a href="analytics.html" data-mnav="analytics">Analytics</a>
+  <a href="privacy.html" data-mnav="privacy">Privacy</a>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
 </div>
 
-<div class="page">
+<div class="page-progress" aria-hidden="true"><i id="pageProgress"></i></div>
 
-<!-- ═══ HERO ═══ -->
-<section class="mod-hero">
-  <div class="mod-hero-copy">
-    <div class="chip"><span class="pulse-dot"></span> Module 04 · Planner</div>
-    <h1>Your term,<br><span class="grad">block by block.</span></h1>
-    <p class="sub">Month for the map, week for the plan, day for the grind. Colour-coded study sessions, revision blocks and exam days that never sneak up on you.</p>
-    <ul class="flist">
-      <li><span class="dot"></span><span><b>Exam countdown</b> pinned at the top</span></li>
-      <li><span class="dot"></span><span><b>Type-coded events</b> — study, exam, revision, break</span></li>
-      <li><span class="dot"></span><span><b>Three views</b>, one tap apart</span></li>
-    </ul>
-    <div class="btn-row" style="margin-top:26px">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-      <a class="btn btn-ghost" href="index.html">← All modules</a>
+<main id="main">
+
+  <!-- ═══ hero ═══ -->
+  <header class="page-hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Module 04 · Planner</p>
+        <h1>Your term,<br><span class="serif">block by block.</span></h1>
+        <p class="lede">Month for the map, week for the plan, day for the grind. Colour-coded study sessions, revision blocks and exam days that never sneak up on you.</p>
+        <ul class="checklist">
+          <li><span><b>Exam countdown</b> pinned where you can't miss it</span></li>
+          <li><span><b>Type-coded events</b> — study, exam, revision, break</span></li>
+          <li><span><b>Three views</b>, one tap apart</span></li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+          <a class="btn ghost" href="index.html#modules">All modules</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <figure class="phone-frame tilt">
+          <img src="assets/gallery/exams.webp" width="534" height="1170" alt="Student OS exams screen with upcoming exam and countdown in the planner" loading="eager" decoding="async">
+        </figure>
+        <div class="float-chip fc1">This week<b>12 events</b></div>
+        <div class="float-chip fc2">Next exam<b>9 days</b></div>
+        <div class="float-chip fc3">Syllabus<b>84% covered</b></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ week view ═══ -->
+  <section class="section">
+    <div class="wrap split reverse">
+      <div class="split-copy reveal">
+        <p class="eyebrow">Week view</p>
+        <h2>Seven days, <span class="serif">stacked with intent.</span></h2>
+        <p>Every block has a type and a colour — study violet, exam pink, revision lilac, break green. Glance at the shape of the week before it happens, then adjust the plan while it still can be adjusted.</p>
+        <ul class="checklist">
+          <li><span><b>Month</b> for deadlines and exam dates</span></li>
+          <li><span><b>Week</b> for the shape of the work</span></li>
+          <li><span><b>Day</b> for the next right thing</span></li>
+        </ul>
+      </div>
+      <div class="visual reveal" data-delay="1">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="label">This week</span>
+            <span class="pill indigo"><span class="dot"></span>6h 20m planned</span>
+          </div>
+          <div class="week-board" aria-label="Illustrative week plan">
+            <div class="wd"><i class="wb" style="--h:34%"></i><i class="wb rev" style="--h:18%"></i><span>Mon</span></div>
+            <div class="wd"><i class="wb" style="--h:52%"></i><i class="wb rest" style="--h:12%"></i><span>Tue</span></div>
+            <div class="wd"><i class="wb rev" style="--h:40%"></i><span>Wed</span></div>
+            <div class="wd"><i class="wb" style="--h:58%"></i><i class="wb exam" style="--h:16%"></i><span>Thu</span></div>
+            <div class="wd"><i class="wb" style="--h:47%"></i><span>Fri</span></div>
+            <div class="wd"><i class="wb rev" style="--h:66%"></i><i class="wb" style="--h:22%"></i><span>Sat</span></div>
+            <div class="wd"><i class="wb rest" style="--h:24%"></i><span>Sun</span></div>
+          </div>
+          <div class="habit-legend">
+            <span class="k"><i class="sw on"></i>Study</span>
+            <span class="k"><i class="sw" style="background:rgba(155,100,242,.75)"></i>Revision</span>
+            <span class="k"><i class="sw" style="background:rgba(238,95,167,.8)"></i>Exam</span>
+            <span class="k"><i class="sw" style="background:rgba(23,179,161,.7)"></i>Break</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ features ═══ -->
+  <section class="section white">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">The method</p>
+        <h2>A term you can <span class="serif">actually see.</span></h2>
+        <p>The plan is only useful if it survives contact with a real week. These are the pieces that make it survive.</p>
+      </div>
+      <div class="features">
+        <div class="feature reveal">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></div>
+          <h3>Three views, one tap</h3>
+          <p>Zoom out to the month, shape the week, then work the day. The same events follow you through every view.</p>
+          <span class="tag">Month · week · day</span>
+        </div>
+        <div class="feature warm reveal" data-delay="1">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg></div>
+          <h3>Exam countdown</h3>
+          <p>Every exam carries a live countdown and a preparation status, so the date is a plan instead of a surprise.</p>
+          <span class="tag">Never sneak up again</span>
+        </div>
+        <div class="feature accent reveal" data-delay="2">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg></div>
+          <h3>Type-coded blocks</h3>
+          <p>Study, exam, revision and break each get a colour. The week's balance is visible before you live it.</p>
+          <span class="tag">Colour = intent</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-wrap">
+    <div class="wrap">
+      <div class="cta-card reveal">
+        <p class="eyebrow">Plan it once</p>
+        <h2>Show up on time,<br><span class="serif">every time.</span></h2>
+        <div class="btn-row">
+          <a class="btn light" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get on Google Play</a>
+          <a class="btn ghost" href="analytics.html">Next: Analytics →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a class="foot-brand" href="index.html">
+          <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+          <span>Student OS</span>
+        </a>
+        <p class="foot-note">Plan the day, lock in your focus and keep your streak. Free on Android, no account, no ads.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="focus.html">Focus</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="habits.html">Habits</a>
+        <a href="planner.html">Planner</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Student OS · MIT licensed</span>
+      <span><a href="https://github.com/jainam6610/student-os">Source</a> · <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Google Play</a></span>
     </div>
   </div>
-  <div class="mock-stage">
-    <div class="mock-tilt" id="mockTilt">
-      <div class="phone" style="--pglow:rgba(177,140,250,.4)"><div data-screen="month"></div></div>
-      <div class="floater fl1"><span class="f-ic">📅</span> 12 events · week</div>
-      <div class="floater fl2"><span class="f-ic">⏳</span> Exams in 9 days</div>
-      <div class="floater fl3"><span class="f-ic">🎯</span> Syllabus 84%</div>
-      <div class="floater fl4"><span class="f-ic">🟣</span> Revision Tuesday</div>
-    </div>
-  </div>
-</section>
+</footer>
 
-<!-- ═══ WEEK VIEW 3D ═══ -->
-<section class="world reverse">
-  <div class="container"><div class="world-inner reverse">
-    <div class="world-text reveal">
-      <div class="eyebrow">Week view</div>
-      <h2>Seven days,<br>stacked with intent.</h2>
-      <p>Every block has a type and a colour — study violet, exam red, revision purple, break green. Glance at the shape of the week before it happens.</p>
-    </div>
-    <div class="stage3d">
-      <div class="scene3d"><div class="id3d">
-        <div class="phone reveal-zoom" style="--pglow:rgba(177,140,250,.4)"><div data-screen="week"></div></div>
-      </div></div>
-    </div>
-  </div></div>
-</section>
-
-<!-- ═══ SCREENS STRIP ═══ -->
-<section class="container" style="padding:40px 0 30px">
-  <div class="section-head reveal">
-    <div class="eyebrow center-eyebrow">Related screens</div>
-    <h2>Screens around Planner.</h2>
-  </div>
-</section>
-<div class="strip get-3d">
-  <div class="reveal-zoom"><div class="phone"><div data-screen="month"></div></div><div class="cap">Month grid</div></div>
-  <div class="reveal-zoom reveal-d1"><div class="phone"><div data-screen="week"></div></div><div class="cap">Week blocks</div></div>
-  <div class="reveal-zoom reveal-d2"><div class="phone"><div data-screen="tasks"></div></div><div class="cap">Linked tasks</div></div>
-  <div class="reveal-zoom"><div class="phone"><div data-screen="dashboard"></div></div><div class="cap">Dashboard</div></div>
-</div>
-
-<!-- ═══ CTA ═══ -->
-<section class="cta">
-  <div class="cta-glow"></div>
-  <div class="cta-content reveal">
-    <div class="eyebrow center-eyebrow">Plan it once</div>
-    <h2>Show up on time,<br><span class="grad">every time.</span></h2>
-    <div class="btn-row" style="justify-content:center">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get on Google Play</a>
-      <a class="btn btn-ghost" href="analytics.html">Next: Analytics →</a>
-    </div>
-  </div>
-</section>
-
-</div><!-- /page -->
-
-<div class="vignette" aria-hidden="true"></div>
-<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
-<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-<script src="assets/main.js" defer></script>
+<button class="back-top" id="backTop" type="button" aria-label="Back to top">↑</button>
+<script src="assets/site.js" defer></script>
 </body>
 </html>

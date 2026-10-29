@@ -1,139 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tasks — Student OS</title>
 <meta name="description" content="Task manager in Student OS: list and kanban views, priorities, subjects, due dates, subtasks and XP for completed work.">
-<meta name="theme-color" content="#0a0a14">
+<meta name="theme-color" content="#f6f5fa">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 </head>
-<body data-page="tasks.html">
+<body data-page="tasks">
+<a class="skip" href="#main">Skip to content</a>
 
-<div class="wipe" id="wipe" aria-hidden="true">
-  <div class="wipe-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></div>
-</div>
-
-<div class="progress" id="progress"></div>
-<div class="ambient" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="grid-overlay" aria-hidden="true"></div>
-
-<nav class="topnav" id="topnav">
+<nav class="nav" id="siteNav" aria-label="Primary">
   <a class="brand" href="index.html">
-    <span class="brand-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></span>
-    Student OS
+    <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+    <span>Student OS</span>
   </a>
   <div class="nav-links">
-    <a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
+    <a href="focus.html" data-nav="focus">Focus</a>
+    <a href="tasks.html" data-nav="tasks">Tasks</a>
+    <a href="habits.html" data-nav="habits">Habits</a>
+    <a href="planner.html" data-nav="planner">Planner</a>
+    <a href="analytics.html" data-nav="analytics">Analytics</a>
+    <a href="privacy.html" data-nav="privacy">Privacy</a>
   </div>
-  <div class="nav-right">
-    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-    <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
-  </div>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+  <button class="burger" id="navBurger" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"><span></span><span></span><span></span></button>
 </nav>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Home</a><a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
-  <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener" style="color:var(--accent-soft)">Get the app →</a>
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <a href="index.html">Home</a>
+  <a href="focus.html" data-mnav="focus">Focus</a>
+  <a href="tasks.html" data-mnav="tasks">Tasks</a>
+  <a href="habits.html" data-mnav="habits">Habits</a>
+  <a href="planner.html" data-mnav="planner">Planner</a>
+  <a href="analytics.html" data-mnav="analytics">Analytics</a>
+  <a href="privacy.html" data-mnav="privacy">Privacy</a>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
 </div>
 
-<div class="page">
+<div class="page-progress" aria-hidden="true"><i id="pageProgress"></i></div>
 
-<!-- ═══ HERO ═══ -->
-<section class="mod-hero">
-  <div class="mod-hero-copy">
-    <div class="chip"><span class="pulse-dot"></span> Module 02 · Tasks</div>
-    <h1>Every assignment,<br><span class="grad">exactly where</span><br>you left it.</h1>
-    <p class="sub">List or kanban. Priority badges, subjects, due dates and subtasks. Check something off and XP lands in your account — no account needed.</p>
-    <ul class="flist">
-      <li><span class="dot"></span><span><b>List & kanban</b> views from the same data</span></li>
-      <li><span class="dot"></span><span><b>XP rewards</b> — 15 / 30 / 50 by priority</span></li>
-      <li><span class="dot"></span><span><b>Subjects & due dates</b> keep the term organised</span></li>
-    </ul>
-    <div class="btn-row" style="margin-top:26px">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-      <a class="btn btn-ghost" href="index.html">← All modules</a>
+<main id="main">
+
+  <!-- ═══ hero ═══ -->
+  <header class="page-hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Module 02 · Tasks</p>
+        <h1>Every assignment,<br><span class="serif">exactly where you left it.</span></h1>
+        <p class="lede">List or kanban. Priority badges, subjects, due dates and subtasks. Check something off and XP lands in your account — no account needed.</p>
+        <ul class="checklist">
+          <li><span><b>List and kanban</b> views from the same data</span></li>
+          <li><span><b>XP rewards</b> of 15, 30 or 50 depending on priority</span></li>
+          <li><span><b>Subjects and due dates</b> that keep the term organised</span></li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+          <a class="btn ghost" href="index.html#modules">All modules</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <figure class="phone-frame tilt">
+          <img src="assets/gallery/assignment.webp" width="534" height="1170" alt="New assignment sheet in Student OS with the subject picker open" loading="eager" decoding="async">
+        </figure>
+        <div class="float-chip fc1">This term<b>38 done</b></div>
+        <div class="float-chip fc2">High priority<b>+50 XP</b></div>
+        <div class="float-chip fc3">Subjects<b>6 active</b></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ kanban ═══ -->
+  <section class="section">
+    <div class="wrap split reverse">
+      <div class="split-copy reveal">
+        <p class="eyebrow">Kanban</p>
+        <h2>Drag your term <span class="serif">across the board.</span></h2>
+        <p>Three columns — to do, doing, done. The same tasks as the list, one gesture apart. Status updates instantly everywhere, because every view reads the same source.</p>
+        <ul class="checklist">
+          <li><span><b>Instant search</b> across titles and notes</span></li>
+          <li><span><b>Status filters</b> — all, todo, in progress, done</span></li>
+          <li><span><b>Subtask progress</b> shown on every card</span></li>
+        </ul>
+      </div>
+      <div class="visual reveal" data-delay="1">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="label">Term board</span>
+            <span class="pill indigo"><span class="dot"></span>Autosaved</span>
+          </div>
+          <div class="kanban">
+            <div class="kcol">
+              <div class="khead">To do <span>3</span></div>
+              <div class="kcard"><b>Finish physics lab report</b><span style="--c:#ee5fa7">High · due Fri</span></div>
+              <div class="kcard"><b>Read chapter 7 notes</b><span style="--c:#5b5bf0">Medium · 2 subtasks</span></div>
+              <div class="kcard"><b>Revise integration rules</b><span style="--c:#17b3a1">Low · today</span></div>
+            </div>
+            <div class="kcol">
+              <div class="khead">Doing <span>2</span></div>
+              <div class="kcard"><b>Maths past paper 3</b><span style="--c:#5b5bf0">Medium · 1 of 3</span></div>
+              <div class="kcard"><b>Chemistry flashcards</b><span style="--c:#ff9b62">Low · 12 cards</span></div>
+            </div>
+            <div class="kcol">
+              <div class="khead">Done <span>2</span></div>
+              <div class="kcard done"><b>Submit English essay</b><span style="--c:#17b3a1">+50 XP</span></div>
+              <div class="kcard done"><b>Physics formula sheet</b><span style="--c:#17b3a1">+15 XP</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ features ═══ -->
+  <section class="section white">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">The details</p>
+        <h2>Small fields that <span class="serif">save the term.</span></h2>
+        <p>Enough structure to stay ahead, not so much that adding a task becomes a task.</p>
+      </div>
+      <div class="features">
+        <div class="feature reveal">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg></div>
+          <h3>List and kanban</h3>
+          <p>Scan everything in a list, or move work across three columns. Same tasks, two ways of thinking.</p>
+          <span class="tag">One source of truth</span>
+        </div>
+        <div class="feature warm reveal" data-delay="1">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg></div>
+          <h3>XP that means something</h3>
+          <p>Low is 15 XP, medium 30, high 50. Finishing work levels you up instead of just clearing a checkbox.</p>
+          <span class="tag">Level up at 1,000 XP</span>
+        </div>
+        <div class="feature accent reveal" data-delay="2">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg></div>
+          <h3>Subjects and subtasks</h3>
+          <p>Group by subject, add due dates and break big pieces into subtasks with their own progress.</p>
+          <span class="tag">Built for coursework</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ XP strip ═══ -->
+  <section class="section tight">
+    <div class="wrap">
+      <div class="reveal" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+        <span class="pill"><span class="dot" style="color:#17b3a1"></span>Low · 15 XP</span>
+        <span class="pill indigo"><span class="dot"></span>Medium · 30 XP</span>
+        <span class="pill rose"><span class="dot"></span>High · 50 XP</span>
+        <span class="pill"><span class="dot" style="color:#ff9b62"></span>Level up at 1,000 XP</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-wrap">
+    <div class="wrap">
+      <div class="cta-card reveal">
+        <p class="eyebrow">Never lose an assignment again</p>
+        <h2>Check it off.<br><span class="serif">Earn the XP.</span></h2>
+        <div class="btn-row">
+          <a class="btn light" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get on Google Play</a>
+          <a class="btn ghost" href="habits.html">Next: Habits →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a class="foot-brand" href="index.html">
+          <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+          <span>Student OS</span>
+        </a>
+        <p class="foot-note">Plan the day, lock in your focus and keep your streak. Free on Android, no account, no ads.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="focus.html">Focus</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="habits.html">Habits</a>
+        <a href="planner.html">Planner</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Student OS · MIT licensed</span>
+      <span><a href="https://github.com/jainam6610/student-os">Source</a> · <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Google Play</a></span>
     </div>
   </div>
-  <div class="mock-stage">
-    <div class="mock-tilt" id="mockTilt">
-      <div class="phone" style="--pglow:rgba(138,99,245,.4)"><div data-screen="tasks"></div></div>
-      <div class="floater fl1"><span class="f-ic">✅</span> 38 done this term</div>
-      <div class="floater fl2"><span class="f-ic">⚡</span> +50 XP · high</div>
-      <div class="floater fl3"><span class="f-ic">🗂</span> 6 subjects</div>
-      <div class="floater fl4"><span class="f-ic">📎</span> subtasks inside</div>
-    </div>
-  </div>
-</section>
+</footer>
 
-<!-- ═══ KANBAN 3D ═══ -->
-<section class="world">
-  <div class="container"><div class="world-inner">
-    <div class="world-text reveal">
-      <div class="eyebrow">Kanban</div>
-      <h2>Drag your term<br>across the board.</h2>
-      <p>Three columns — to do, doing, done. The same tasks as the list, one gesture apart. Everything computes instantly from the same source.</p>
-      <ul class="flist">
-        <li><span class="dot"></span><span><b>Instant search</b> across titles and notes</span></li>
-        <li><span class="dot"></span><span><b>Status filters</b> — all / todo / in progress / done</span></li>
-        <li><span class="dot"></span><span><b>Subtask progress</b> shown on every card</span></li>
-      </ul>
-    </div>
-    <div class="stage3d">
-      <div class="scene3d"><div class="id3d">
-        <div class="phone reveal-zoom" style="--pglow:rgba(177,140,250,.4);transform:rotateY(-10deg)"><div data-screen="kanban"></div></div>
-      </div></div>
-    </div>
-  </div></div>
-</section>
-
-<!-- ═══ XP STRIP ═══ -->
-<section class="container" style="padding:30px 0">
-  <div class="reveal" style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
-    <div class="float-stat">🟢 LOW · 15 XP</div>
-    <div class="float-stat" style="border-color:rgba(138,99,245,.4)">🟣 MED · 30 XP</div>
-    <div class="float-stat" style="border-color:rgba(240,98,146,.4)">🔴 HIGH · 50 XP</div>
-    <div class="float-stat" style="border-color:rgba(62,207,142,.4)">LEVEL UP at 1,000 XP</div>
-  </div>
-</section>
-
-<!-- ═══ SCREENS STRIP ═══ -->
-<section class="container" style="padding:70px 0 30px">
-  <div class="section-head reveal">
-    <div class="eyebrow center-eyebrow">Related screens</div>
-    <h2>Screens around Tasks.</h2>
-  </div>
-</section>
-<div class="strip get-3d">
-  <div class="reveal-zoom"><div class="phone"><div data-screen="tasks"></div></div><div class="cap">Task list</div></div>
-  <div class="reveal-zoom reveal-d1"><div class="phone"><div data-screen="kanban"></div></div><div class="cap">Kanban</div></div>
-  <div class="reveal-zoom reveal-d2"><div class="phone"><div data-screen="palette"></div></div><div class="cap">⌘K quick add</div></div>
-  <div class="reveal-zoom"><div class="phone"><img class="shot-img" src="assets/tasks.png" alt="Tasks screen" loading="lazy" decoding="async" style="border-radius:30px"></div><div class="cap">Real screenshot</div></div>
-</div>
-
-<!-- ═══ CTA ═══ -->
-<section class="cta">
-  <div class="cta-glow"></div>
-  <div class="cta-content reveal">
-    <div class="eyebrow center-eyebrow">Never lose an assignment again</div>
-    <h2>Check it off.<br><span class="grad">Earn the XP.</span></h2>
-    <div class="btn-row" style="justify-content:center">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get on Google Play</a>
-      <a class="btn btn-ghost" href="habits.html">Next: Habits →</a>
-    </div>
-  </div>
-</section>
-
-</div><!-- /page -->
-
-<div class="vignette" aria-hidden="true"></div>
-<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
-<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-<script src="assets/main.js" defer></script>
+<button class="back-top" id="backTop" type="button" aria-label="Back to top">↑</button>
+<script src="assets/site.js" defer></script>
 </body>
 </html>

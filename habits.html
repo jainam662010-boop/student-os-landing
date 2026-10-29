@@ -1,131 +1,220 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Habits — Student OS</title>
 <meta name="description" content="Habit tracking in Student OS: weekly streak grids, best streaks, celebration animations and consistency stats.">
-<meta name="theme-color" content="#0a0a14">
+<meta name="theme-color" content="#f6f5fa">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 </head>
-<body data-page="habits.html">
+<body data-page="habits">
+<a class="skip" href="#main">Skip to content</a>
 
-<div class="wipe" id="wipe" aria-hidden="true">
-  <div class="wipe-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></div>
-</div>
-
-<div class="progress" id="progress"></div>
-<div class="ambient" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="grid-overlay" aria-hidden="true"></div>
-
-<nav class="topnav" id="topnav">
+<nav class="nav" id="siteNav" aria-label="Primary">
   <a class="brand" href="index.html">
-    <span class="brand-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></span>
-    Student OS
+    <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+    <span>Student OS</span>
   </a>
   <div class="nav-links">
-    <a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
+    <a href="focus.html" data-nav="focus">Focus</a>
+    <a href="tasks.html" data-nav="tasks">Tasks</a>
+    <a href="habits.html" data-nav="habits">Habits</a>
+    <a href="planner.html" data-nav="planner">Planner</a>
+    <a href="analytics.html" data-nav="analytics">Analytics</a>
+    <a href="privacy.html" data-nav="privacy">Privacy</a>
   </div>
-  <div class="nav-right">
-    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-    <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
-  </div>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+  <button class="burger" id="navBurger" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"><span></span><span></span><span></span></button>
 </nav>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Home</a><a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
-  <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener" style="color:var(--accent-soft)">Get the app →</a>
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <a href="index.html">Home</a>
+  <a href="focus.html" data-mnav="focus">Focus</a>
+  <a href="tasks.html" data-mnav="tasks">Tasks</a>
+  <a href="habits.html" data-mnav="habits">Habits</a>
+  <a href="planner.html" data-mnav="planner">Planner</a>
+  <a href="analytics.html" data-mnav="analytics">Analytics</a>
+  <a href="privacy.html" data-mnav="privacy">Privacy</a>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
 </div>
 
-<div class="page">
+<div class="page-progress" aria-hidden="true"><i id="pageProgress"></i></div>
 
-<!-- ═══ HERO ═══ -->
-<section class="mod-hero">
-  <div class="mod-hero-copy">
-    <div class="chip"><span class="pulse-dot"></span> Module 03 · Habits</div>
-    <h1>Consistency<br>you can <span class="grad-green">see.</span></h1>
-    <p class="sub">A grid of green squares that slowly becomes the graph of your discipline. Toggle a day and watch the streak counter celebrate.</p>
-    <ul class="flist">
-      <li><span class="dot"></span><span><b>Streaks & best streaks</b>, computed automatically</span></li>
-      <li><span class="dot"></span><span><b>Emoji habits</b> — hydrate, read, sleep, anything</span></li>
-      <li><span class="dot"></span><span><b>Celebration pulse</b> every time you show up</span></li>
-    </ul>
-    <div class="btn-row" style="margin-top:26px">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-      <a class="btn btn-ghost" href="index.html">← All modules</a>
-    </div>
-  </div>
-  <div class="mock-stage">
-    <div class="mock-tilt" id="mockTilt">
-      <div class="phone" style="--pglow:rgba(62,207,142,.42)"><div data-screen="habits"></div></div>
-      <div class="floater fl1"><span class="f-ic">🔥</span> 21-day streak</div>
-      <div class="floater fl2"><span class="f-ic">🏆</span> Best · 32 days</div>
-      <div class="floater fl3"><span class="f-ic">✨</span> 4/4 today</div>
-      <div class="floater fl4"><span class="f-ic">📈</span> 92% week rate</div>
-    </div>
-  </div>
-</section>
+<main id="main">
 
-<!-- ═══ INTERACTIVE DEMO ═══ -->
-<section class="world">
-  <div class="container"><div class="world-inner">
-    <div class="world-text reveal">
-      <div class="eyebrow">Try it</div>
-      <h2>Tap a square.<br>Watch it grow.</h2>
-      <p>This is the exact mechanic: every green square is a day you showed up. Tap days on and off — the counter follows.</p>
-    </div>
-    <div class="stage3d">
-      <div class="scene3d"><div class="hdemo reveal-zoom">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-          <div class="lb">SHOWED UP FOR 28 DAYS</div>
-          <div class="hdemo-streak" id="demoStreak">16d streak</div>
+  <!-- ═══ hero ═══ -->
+  <header class="page-hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Module 03 · Habits</p>
+        <h1>Consistency<br><span class="serif">you can see.</span></h1>
+        <p class="lede">A grid of green squares that slowly becomes the graph of your discipline. Toggle a day and watch the streak counter celebrate.</p>
+        <ul class="checklist">
+          <li><span><b>Streaks and best streaks</b>, computed automatically</span></li>
+          <li><span><b>Any habit</b> — hydrate, read, sleep, revise</span></li>
+          <li><span><b>A quiet celebration</b> every time you show up</span></li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+          <a class="btn ghost" href="index.html#modules">All modules</a>
         </div>
-        <div class="hdemo-grid" id="demoBoard">
-          <button></button><button></button><button></button><button></button><button></button><button></button><button></button><button></button><button></button><button></button><button></button><button></button><button></button><button></button>
-          <button></button><button></button><button></button><button class="on"></button><button class="on"></button><button class="on"></button><button class="on"></button><button></button><button class="on"></button><button class="on"></button><button class="on"></button><button></button><button class="on"></button><button class="on"></button>
-          <button class="on"></button><button class="on"></button><button class="on"></button><button class="on"></button><button class="on"></button><button class="on"></button><button class="on"></button><button></button><button></button>
+      </div>
+      <div class="hero-visual">
+        <div class="panel streak-card reveal" data-delay="1" style="max-width:330px">
+          <span class="pill"><span class="dot"></span>Current streak</span>
+          <div class="big">21</div>
+          <div class="cap">days shown up</div>
+          <div class="mini-weeks" aria-hidden="true">
+            <i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i>
+            <i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+            <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i>
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+          </div>
         </div>
-      </div></div>
+        <div class="float-chip fc1">Best streak<b>32 days</b></div>
+        <div class="float-chip fc2">This week<b>6 / 7</b></div>
+        <div class="float-chip fc3">Week rate<b>92%</b></div>
+      </div>
     </div>
-  </div></div>
-</section>
+  </header>
 
-<!-- ═══ SCREENS STRIP ═══ -->
-<section class="container" style="padding:40px 0 30px">
-  <div class="section-head reveal">
-    <div class="eyebrow center-eyebrow">Related screens</div>
-    <h2>Screens around Habits.</h2>
-  </div>
-</section>
-<div class="strip get-3d">
-  <div class="reveal-zoom"><div class="phone"><div data-screen="habits"></div></div><div class="cap">Habit tracker</div></div>
-  <div class="reveal-zoom reveal-d1"><div class="phone"><div data-screen="dashboard"></div></div><div class="cap">Streak on dashboard</div></div>
-  <div class="reveal-zoom reveal-d2"><div class="phone"><div data-screen="settings"></div></div><div class="cap">Personalise</div></div>
-</div>
+  <!-- ═══ interactive demo ═══ -->
+  <section class="section">
+    <div class="wrap split">
+      <div class="split-copy reveal">
+        <p class="eyebrow">Try it</p>
+        <h2>Tap a square. <span class="serif">Watch it grow.</span></h2>
+        <p>This is the exact mechanic: every green square is a day you showed up. Tap days on and off and the streak follows from the most recent day backwards.</p>
+        <p class="mt">The app adds the celebration, best-streak history and a weekly consistency score. The grid is the whole idea.</p>
+      </div>
+      <div class="visual reveal" data-delay="1">
+        <div class="panel">
+          <div class="habit-board">
+            <div class="habit-top">
+              <span class="panel-head label" style="margin:0">Last 28 days</span>
+              <span class="habit-streak"><i></i><span id="demoStreak">0d streak</span></span>
+            </div>
+            <div class="habit-grid" id="demoBoard" role="group" aria-label="Toggle habit days">
+              <button type="button" class="on" aria-label="Day 1"></button>
+              <button type="button" class="on" aria-label="Day 2"></button>
+              <button type="button" aria-label="Day 3"></button>
+              <button type="button" class="on" aria-label="Day 4"></button>
+              <button type="button" class="on" aria-label="Day 5"></button>
+              <button type="button" class="on" aria-label="Day 6"></button>
+              <button type="button" aria-label="Day 7"></button>
+              <button type="button" class="on" aria-label="Day 8"></button>
+              <button type="button" class="on" aria-label="Day 9"></button>
+              <button type="button" aria-label="Day 10"></button>
+              <button type="button" class="on" aria-label="Day 11"></button>
+              <button type="button" class="on" aria-label="Day 12"></button>
+              <button type="button" class="on" aria-label="Day 13"></button>
+              <button type="button" class="on" aria-label="Day 14"></button>
+              <button type="button" aria-label="Day 15"></button>
+              <button type="button" class="on" aria-label="Day 16"></button>
+              <button type="button" class="on" aria-label="Day 17"></button>
+              <button type="button" class="on" aria-label="Day 18"></button>
+              <button type="button" class="on" aria-label="Day 19"></button>
+              <button type="button" aria-label="Day 20"></button>
+              <button type="button" class="on" aria-label="Day 21"></button>
+              <button type="button" class="on" aria-label="Day 22"></button>
+              <button type="button" class="on" aria-label="Day 23"></button>
+              <button type="button" class="on" aria-label="Day 24"></button>
+              <button type="button" class="on" aria-label="Day 25"></button>
+              <button type="button" class="on" aria-label="Day 26"></button>
+              <button type="button" class="on" aria-label="Day 27"></button>
+              <button type="button" class="on" aria-label="Day 28"></button>
+            </div>
+            <div class="habit-days" aria-hidden="true"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+            <div class="habit-legend">
+              <span class="k"><i class="sw"></i>Missed</span>
+              <span class="k"><i class="sw on"></i>Showed up</span>
+              <span id="demoCount">0 / 28 days</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- ═══ CTA ═══ -->
-<section class="cta">
-  <div class="cta-glow"></div>
-  <div class="cta-content reveal">
-    <div class="eyebrow center-eyebrow">Small daily wins</div>
-    <h2>Streaks that<br><span class="grad">make you consistent.</span></h2>
-    <div class="btn-row" style="justify-content:center">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get on Google Play</a>
-      <a class="btn btn-ghost" href="planner.html">Next: Planner →</a>
+  <!-- ═══ features ═══ -->
+  <section class="section white">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Under the squares</p>
+        <h2>Streaks that <span class="serif">make you consistent.</span></h2>
+        <p>It isn't the number that changes you — it's not wanting to break it.</p>
+      </div>
+      <div class="features">
+        <div class="feature accent reveal">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg></div>
+          <h3>Streak and best streak</h3>
+          <p>Every check-in updates the current run and remembers your longest one. Reset days are visible, not hidden.</p>
+          <span class="tag">Computed automatically</span>
+        </div>
+        <div class="feature reveal" data-delay="1">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg></div>
+          <h3>Any habit you keep</h3>
+          <p>Name it, colour it, choose the days. Hydration, revision, reading, sleep — the grid works the same way.</p>
+          <span class="tag">No limits</span>
+        </div>
+        <div class="feature warm reveal" data-delay="2">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg></div>
+          <h3>Quiet celebration</h3>
+          <p>Check a day and the square fills with a soft pulse. No confetti storm, no guilt trip on a missed day.</p>
+          <span class="tag">Calm motivation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-wrap">
+    <div class="wrap">
+      <div class="cta-card reveal">
+        <p class="eyebrow">Small daily wins</p>
+        <h2>Show up today.<br><span class="serif">The streak can wait.</span></h2>
+        <div class="btn-row">
+          <a class="btn light" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get on Google Play</a>
+          <a class="btn ghost" href="planner.html">Next: Planner →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a class="foot-brand" href="index.html">
+          <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+          <span>Student OS</span>
+        </a>
+        <p class="foot-note">Plan the day, lock in your focus and keep your streak. Free on Android, no account, no ads.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="focus.html">Focus</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="habits.html">Habits</a>
+        <a href="planner.html">Planner</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Student OS · MIT licensed</span>
+      <span><a href="https://github.com/jainam6610/student-os">Source</a> · <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Google Play</a></span>
     </div>
   </div>
-</section>
+</footer>
 
-</div><!-- /page -->
-
-<div class="vignette" aria-hidden="true"></div>
-<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
-<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-<script src="assets/main.js" defer></script>
+<button class="back-top" id="backTop" type="button" aria-label="Back to top">↑</button>
+<script src="assets/site.js" defer></script>
 </body>
 </html>

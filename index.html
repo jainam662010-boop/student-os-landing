@@ -1,9 +1,17 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Student OS: the operating system built for students</title>
+<meta name="description" content="Plan the day, lock in your focus and keep your streak. Student OS is a free Android study app with a planner, focus timer, tasks, habits and insights. No account, no ads.">
+<meta name="theme-color" content="#f6f5fa">
+<meta property="og:title" content="Student OS — the operating system built for students">
+<meta property="og:description" content="Plan the day, lock in your focus and keep your streak. Free on Android, no account, no ads.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/gallery/home.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -150,9 +158,40 @@ footer{border-top:1px solid rgba(20,19,28,.12);padding:26px 24px calc(30px + env
  .gal-foot{display:none}
 }
 </style>
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-<nav class="nav"><b>Student OS</b><a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a></nav>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav" id="siteNav" aria-label="Primary">
+ <a class="brand" href="index.html">
+  <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+  <span>Student OS</span>
+ </a>
+ <div class="nav-links">
+  <a href="index.html#modules">Modules</a>
+  <a href="focus.html">Focus</a>
+  <a href="tasks.html">Tasks</a>
+  <a href="habits.html">Habits</a>
+  <a href="planner.html">Planner</a>
+  <a href="analytics.html">Analytics</a>
+  <a href="privacy.html">Privacy</a>
+ </div>
+ <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+ <button class="burger" id="navBurger" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu" hidden>
+ <a href="index.html">Home</a>
+ <a href="index.html#modules">Modules</a>
+ <a href="focus.html">Focus</a>
+ <a href="tasks.html">Tasks</a>
+ <a href="habits.html">Habits</a>
+ <a href="planner.html">Planner</a>
+ <a href="analytics.html">Analytics</a>
+ <a href="privacy.html">Privacy</a>
+ <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+</div>
 
 <header class="hero" id="hero">
  <div class="sticky">
@@ -167,7 +206,8 @@ footer{border-top:1px solid rgba(20,19,28,.12);padding:26px 24px calc(30px + env
  </div>
 </header>
 
-<main>
+<main id="main">
+<div class="page-progress" aria-hidden="true"><i id="pageProgress"></i></div>
 <section class="gal" id="gallery" aria-labelledby="gal-title">
  <div class="gal-pin">
   <div class="gal-head">
@@ -185,6 +225,71 @@ footer{border-top:1px solid rgba(20,19,28,.12);padding:26px 24px calc(30px + env
    </div>
   </div>
   <div class="gal-foot"><b id="gal-name">Home</b><div class="gal-rail"><i id="gal-rail"></i></div><span class="gal-count" id="gal-count">01 / 05</span></div>
+ </div>
+</section>
+
+<section class="hm" id="modules" aria-labelledby="mod-title">
+ <div class="hm-glow" aria-hidden="true"></div>
+ <div class="hm-inner">
+  <div class="hm-top">
+   <p class="eyebrow">All modules</p>
+   <h2 class="hm-title" id="mod-title">Six tools. <span class="serif">One study day.</span></h2>
+   <p class="hm-sub">Hover or tap a module to see where it fits. Every screen is part of the same app — <b>no account, no ads, nothing to sync.</b></p>
+  </div>
+  <div class="hm-stage" id="hmStage">
+   <div class="hm-follow" id="hmFollow" aria-hidden="true"></div>
+   <div class="hm-display" aria-hidden="true">
+    <span class="hm-name" data-name="default">Student OS</span>
+    <span class="hm-name" data-name="Focus">Focus</span>
+    <span class="hm-name" data-name="Tasks">Tasks</span>
+    <span class="hm-name" data-name="Habits">Habits</span>
+    <span class="hm-name" data-name="Planner">Planner</span>
+    <span class="hm-name" data-name="Analytics">Analytics</span>
+    <span class="hm-name" data-name="Privacy">Privacy</span>
+   </div>
+   <div class="hm-meta">
+    <span class="hm-idx" id="hmIdx">00</span>
+    <span class="hm-bar"></span>
+    <span class="hm-role" id="hmRole">Everything, in one place</span>
+   </div>
+   <div class="hm-row" id="hmRow">
+    <a class="hm-card" href="focus.html" data-name="Focus" data-idx="01" data-role="Deep work sessions that keep themselves honest" style="--hm-c:#5b5bf0">
+     <span class="hm-frame"><span class="hm-phone"><img src="assets/gallery/home.webp" width="534" height="1170" alt="" loading="lazy" decoding="async"></span></span>
+     <span class="hm-label"><b>Focus</b><i>01</i></span>
+    </a>
+    <a class="hm-card" href="tasks.html" data-name="Tasks" data-idx="02" data-role="Assignments, subtasks and XP for finished work" style="--hm-c:#ee5fa7">
+     <span class="hm-frame"><span class="hm-phone"><img src="assets/gallery/assignment.webp" width="534" height="1170" alt="" loading="lazy" decoding="async"></span></span>
+     <span class="hm-label"><b>Tasks</b><i>02</i></span>
+    </a>
+    <a class="hm-card" href="habits.html" data-name="Habits" data-idx="03" data-role="Small daily wins, turned into a streak" style="--hm-c:#17b3a1">
+     <span class="hm-frame"><span class="hm-phone"><span class="hm-mini">
+      <span class="mini-top">Routines <b>21d</b></span>
+      <span class="mini-big">4 / 6</span>
+      <span class="mini-sub">shown up today</span>
+      <span class="mini-grid"><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i></span>
+     </span></span></span>
+     <span class="hm-label"><b>Habits</b><i>03</i></span>
+    </a>
+    <a class="hm-card" href="planner.html" data-name="Planner" data-idx="04" data-role="Month, week and day views with exam countdowns" style="--hm-c:#9b64f2">
+     <span class="hm-frame"><span class="hm-phone"><img src="assets/gallery/exams.webp" width="534" height="1170" alt="" loading="lazy" decoding="async"></span></span>
+     <span class="hm-label"><b>Planner</b><i>04</i></span>
+    </a>
+    <a class="hm-card" href="analytics.html" data-name="Analytics" data-idx="05" data-role="Where your hours actually went this week" style="--hm-c:#ff9b62">
+     <span class="hm-frame"><span class="hm-phone"><span class="hm-mini">
+      <span class="mini-top">This week <b>↑ 38%</b></span>
+      <span class="mini-big">6h 20m</span>
+      <span class="mini-sub">focus time</span>
+      <span class="mini-bars"><i style="height:34%"></i><i style="height:52%"></i><i style="height:40%"></i><i style="height:58%"></i><i style="height:47%"></i><i style="height:86%"></i><i style="height:100%"></i></span>
+     </span></span></span>
+     <span class="hm-label"><b>Analytics</b><i>05</i></span>
+    </a>
+    <a class="hm-card" href="privacy.html" data-name="Privacy" data-idx="06" data-role="Your study data stays on your phone" style="--hm-c:#3c9d8f">
+     <span class="hm-frame"><span class="hm-phone"><img src="assets/gallery/splash.webp" width="534" height="1170" alt="" loading="lazy" decoding="async"></span></span>
+     <span class="hm-label"><b>Privacy</b><i>06</i></span>
+    </a>
+   </div>
+   <p class="hm-foot">Six modules <span class="hm-dot">·</span> one app <span class="hm-dot">·</span> no account</p>
+  </div>
  </div>
 </section>
 
@@ -230,17 +335,48 @@ footer{border-top:1px solid rgba(20,19,28,.12);padding:26px 24px calc(30px + env
  <div class="src">As declared in the Data safety section on Google Play.</div>
 </div></section>
 
-<section class="cta">
- <h2>Build better <span class="serif">study habits.</span></h2>
- <a class="btn" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get it on Google Play</a>
- <a class="btn ghost" href="https://studentos-privacy-hub.lovable.app">Read the privacy policy</a>
+<section class="cta-wrap">
+ <div class="wrap">
+  <div class="cta-card">
+   <h2>Build better <span class="serif">study habits.</span></h2>
+   <div class="btn-row">
+    <a class="btn light" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get it on Google Play</a>
+    <a class="btn ghost" href="https://studentos-privacy-hub.lovable.app">Read the privacy policy</a>
+   </div>
+  </div>
+ </div>
 </section>
 </main>
-<footer>
- <span>Student OS, an Android app by Thats.Jainam.</span>
- <span><a href="focus.html">Focus</a> · <a href="tasks.html">Tasks</a> · <a href="habits.html">Habits</a> · <a href="planner.html">Planner</a> · <a href="analytics.html">Analytics</a> · <a href="privacy.html">Privacy</a></span>
- <span><a href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Free on Google Play</a></span>
+
+<footer class="site-footer">
+ <div class="wrap">
+  <div class="foot-top">
+   <div>
+    <a class="foot-brand" href="index.html">
+     <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+     <span>Student OS</span>
+    </a>
+    <p class="foot-note">Plan the day, lock in your focus and keep your streak. Free on Android, no account, no ads.</p>
+   </div>
+   <nav class="foot-links" aria-label="Footer">
+    <a href="focus.html">Focus</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="habits.html">Habits</a>
+    <a href="planner.html">Planner</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="privacy.html">Privacy</a>
+   </nav>
+  </div>
+  <div class="foot-bottom">
+   <span>© <span id="year">2026</span> Student OS · MIT licensed</span>
+   <span><a href="https://github.com/jainam6610/student-os">Source</a> · <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Google Play</a></span>
+  </div>
+ </div>
 </footer>
+
+<button class="back-top" id="backTop" type="button" aria-label="Back to top">↑</button>
+<script src="assets/site.js" defer></script>
+<script src="assets/skiper6.js" defer></script>
 
 <script>
 (function(){

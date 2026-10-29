@@ -1,179 +1,226 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Focus — Student OS</title>
-<meta name="description" content="Deep work sessions in Student OS: a drift-free timestamp timer, ambient breathing 3D knot and the Deep Lock focus shield.">
-<meta name="theme-color" content="#0a0a14">
+<meta name="description" content="Deep work sessions in Student OS: a drift-free timestamp timer, a breathing session ring and the Deep Lock focus shield.">
+<meta name="theme-color" content="#f6f5fa">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 </head>
-<body data-page="focus.html">
+<body data-page="focus">
+<a class="skip" href="#main">Skip to content</a>
 
-<div class="wipe" id="wipe" aria-hidden="true">
-  <div class="wipe-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></div>
-</div>
-
-<div class="progress" id="progress"></div>
-<div class="ambient" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="grid-overlay" aria-hidden="true"></div>
-
-<nav class="topnav" id="topnav">
+<nav class="nav" id="siteNav" aria-label="Primary">
   <a class="brand" href="index.html">
-    <span class="brand-mark"><svg viewBox="0 0 180 180"><path fill="#fff" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="#fff" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg></span>
-    Student OS
+    <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+    <span>Student OS</span>
   </a>
   <div class="nav-links">
-    <a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
+    <a href="focus.html" data-nav="focus">Focus</a>
+    <a href="tasks.html" data-nav="tasks">Tasks</a>
+    <a href="habits.html" data-nav="habits">Habits</a>
+    <a href="planner.html" data-nav="planner">Planner</a>
+    <a href="analytics.html" data-nav="analytics">Analytics</a>
+    <a href="privacy.html" data-nav="privacy">Privacy</a>
   </div>
-  <div class="nav-right">
-    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get the app</a>
-    <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
-  </div>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
+  <button class="burger" id="navBurger" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"><span></span><span></span><span></span></button>
 </nav>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Home</a><a href="focus.html">Focus</a><a href="tasks.html">Tasks</a><a href="habits.html">Habits</a><a href="planner.html">Planner</a><a href="analytics.html">Analytics</a><a href="privacy.html">Privacy</a>
-  <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener" style="color:var(--accent-soft)">Get the app →</a>
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <a href="index.html">Home</a>
+  <a href="focus.html" data-mnav="focus">Focus</a>
+  <a href="tasks.html" data-mnav="tasks">Tasks</a>
+  <a href="habits.html" data-mnav="habits">Habits</a>
+  <a href="planner.html" data-mnav="planner">Planner</a>
+  <a href="analytics.html" data-mnav="analytics">Analytics</a>
+  <a href="privacy.html" data-mnav="privacy">Privacy</a>
+  <a class="go" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get the app</a>
 </div>
 
-<div class="page">
+<div class="page-progress" aria-hidden="true"><i id="pageProgress"></i></div>
 
-<!-- ═══ FOCUS HERO — the session knot ═══ -->
-<section class="focus-hero">
-  <div class="container world-inner" style="gap:40px">
-    <div class="mod-hero-copy">
-      <div class="chip"><span class="pulse-dot"></span> Module 01 · Focus</div>
-      <h1>Two hours.<br><span class="grad">Zero distractions.</span></h1>
-      <p class="sub">Start a Deep Work session and a wireframe knot begins to breathe — the exact 3D object that orbits the timer inside the app. When it's still, you're still.</p>
-      <ul class="flist">
-        <li><span class="dot"></span><span><b>Timestamp-based timer</b> — zero drift, survives refresh</span></li>
-        <li><span class="dot"></span><span><b>Deep Lock shield</b> blocks distracting apps instantly</span></li>
-        <li><span class="dot"></span><span><b>Ambient cards</b> — stats panel, quotes, streaks</span></li>
-      </ul>
-      <div class="btn-row" style="margin-top:26px">
-        <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Start focusing</a>
-        <a class="btn btn-ghost" href="index.html">← All modules</a>
+<main id="main">
+
+  <!-- ═══ hero ═══ -->
+  <header class="page-hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Module 01 · Focus</p>
+        <h1>Two hours.<br><span class="serif">Zero distractions.</span></h1>
+        <p class="lede">Start a Deep Work session and your phone goes quiet. The timer keeps itself honest, the shield keeps you in the app and the ring shows how much of today you've actually used.</p>
+        <ul class="checklist">
+          <li><span><b>Timestamp-based timer</b> — zero drift, survives a refresh</span></li>
+          <li><span><b>Deep Lock shield</b> blocks the apps you choose, instantly</span></li>
+          <li><span><b>Session history</b> that feeds your streak and insights</span></li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Start focusing</a>
+          <a class="btn ghost" href="index.html#modules">All modules</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <figure class="phone-frame tilt">
+          <img src="assets/gallery/home.webp" width="534" height="1170" alt="Student OS home screen showing focus time, streak and study goal" loading="eager" decoding="async">
+        </figure>
+        <div class="float-chip fc1">Deep work<b>02:00:00</b></div>
+        <div class="float-chip fc2">Deep Lock<b>90 · Excellent</b></div>
+        <div class="float-chip fc3">Today's focus<b>3h 42m</b></div>
       </div>
     </div>
-    <div class="focus-stage">
-      <div class="knot-wrap">
-        <div class="torus-host" data-torus='{"opacity":0.85,"speed":0.006,"zoom":4.6,"interact":true,"particles":true}' id="knotHost" style="position:absolute;inset:0"></div>
-        <div class="knot-aura" aria-hidden="true"></div>
-        <div class="orbit spin" style="width:400px;height:400px;"></div>
-        <div class="orbit spin2" style="width:480px;height:480px;border-style:dashed;opacity:.5"></div>
-        <svg class="session-ring" viewBox="0 0 200 200" aria-hidden="true">
-          <defs>
-            <linearGradient id="srGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#c4b5fd"/><stop offset=".5" stop-color="#8a63f5"/><stop offset="1" stop-color="#3ecf8e"/>
-            </linearGradient>
-          </defs>
-          <circle class="sr-track" cx="100" cy="100" r="96"/>
-          <circle class="sr-prog" id="sessionProg" cx="100" cy="100" r="96" pathLength="1"/>
-        </svg>
-        <div class="timer-head">
-          <div class="t" id="focusTimerBig">25:00</div>
-          <div class="s">deep work session</div>
-          <div class="preset-row">
-            <button class="preset on" data-mins="25">25m</button>
-            <button class="preset" data-mins="60">1h</button>
-            <button class="preset" data-mins="90">90m</button>
-            <button class="preset" data-mins="120">2h</button>
+  </header>
+
+  <!-- ═══ timer ═══ -->
+  <section class="section">
+    <div class="wrap split">
+      <div class="split-copy reveal">
+        <p class="eyebrow">The timer</p>
+        <h2>A timer that <span class="serif">can't drift.</span></h2>
+        <p>Most timers count down by subtracting a second every second. Miss a frame in the background and the session is wrong. Student OS stores the end time instead, so the number on screen is always the real number.</p>
+        <p class="mt">Pick 25, 60, 90 or 120 minutes. Pause, resume, close the app — the session picks up exactly where it should.</p>
+        <div class="btn-row">
+          <a class="btn" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Try it in the app</a>
+          <a class="btn ghost" href="#shield">How Deep Lock works</a>
+        </div>
+      </div>
+      <div class="visual reveal" data-delay="1">
+        <div class="focus-demo" id="focusDemo" aria-label="Focus timer demo">
+          <div class="fd-top">
+            <span class="label">Deep work</span>
+            <span class="fd-status"><i></i><span id="fdStatus">Ready</span></span>
+          </div>
+          <div class="fd-ring" id="fdRing" style="--p:100">
+            <div class="fd-face">
+              <div class="fd-time" id="fdTime">25:00</div>
+              <div class="fd-sub">deep work session</div>
+            </div>
+          </div>
+          <div class="fd-presets" role="group" aria-label="Session length">
+            <button type="button" data-mins="25" class="on">25m</button>
+            <button type="button" data-mins="60">1h</button>
+            <button type="button" data-mins="90">90m</button>
+            <button type="button" data-mins="120">2h</button>
+          </div>
+          <div class="fd-actions">
+            <button class="btn" id="fdStart" type="button">Start</button>
+            <button class="btn ghost" id="fdReset" type="button">Reset</button>
+          </div>
+          <p class="fd-foot">This is a live demo. Your real sessions sync to your streak.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ deep lock ═══ -->
+  <section class="section white" id="shield">
+    <div class="wrap split reverse">
+      <div class="split-copy reveal">
+        <p class="eyebrow">Deep Lock</p>
+        <h2>The app that <span class="serif">guards your focus.</span></h2>
+        <p>The moment a session starts, the Focus Shield stands between you and every app fighting for your attention. It notices when you leave and pulls you back — without ever reading your screen content.</p>
+        <ul class="checklist">
+          <li><span>A live <b>protection score</b>, from Fair to Excellent</span></li>
+          <li><span><b>Zero access</b> to messages, passwords or typed text</span></li>
+          <li><span>You choose the app list and every permission</span></li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn ghost" href="privacy.html">Read the privacy promise</a>
+        </div>
+      </div>
+      <div class="visual reveal" data-delay="1">
+        <div class="panel center">
+          <div class="lock-badge"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg></div>
+          <h3>Focus Shield</h3>
+          <p class="mt" style="color:var(--ink-soft);font-size:14.5px">Protection runs only while a session is active.</p>
+          <div class="lock-stats">
+            <div class="lock-stat"><b>90</b><span>Score</span></div>
+            <div class="lock-stat"><b>7</b><span>Apps blocked</span></div>
+            <div class="lock-stat"><b>0</b><span>Screen reads</span></div>
           </div>
         </div>
-        <div class="knot-hint"><span class="drag-ic">⇄</span>&nbsp; drag the knot · it breathes with your session</div>
-      </div>
-      <div class="float-stat fs1" style="position:absolute;top:6%;left:-4%">🔥 Streak 21d</div>
-      <div class="float-stat fs2" style="position:absolute;bottom:4%;right:-4%">🛡 Deep Lock · Score 90</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ DEEP LOCK WORLD ═══ -->
-<section class="world">
-  <div class="container"><div class="world-inner reverse">
-    <div class="world-text reveal">
-      <div class="eyebrow">Deep Lock</div>
-      <h2>The app that<br>guards your focus.</h2>
-      <p>The moment a session starts, the Focus Shield stands between you and every app fighting for your attention — without ever reading your screen content.</p>
-      <ul class="flist">
-        <li><span class="dot"></span><span>Live <b>protection score</b>, Fair → Excellent</span></li>
-        <li><span class="dot"></span><span><b>Zero access</b> to messages, passwords or typed text</span></li>
-        <li><span class="dot"></span><span>You control every permission</span></li>
-      </ul>
-    </div>
-    <div class="stage3d">
-      <div class="scene3d"><div class="id3d" style="display:flex;align-items:center;justify-content:center;gap:30px">
-        <div class="reveal-zoom"><div class="shield">🛡️</div></div>
-        <div class="phone reveal-zoom reveal-d1"><div data-screen="palette"></div></div>
-      </div></div>
-      <div class="float-stat fs1" style="position:absolute;top:8%;left:2%">🔒 Accessibility · on</div>
-      <div class="float-stat fs2" style="position:absolute;bottom:8%;right:2%">📵 0 trackers</div>
-    </div>
-  </div></div>
-</section>
-
-<!-- ═══ SCREENS STRIP ═══ -->
-<section class="container" style="padding:70px 0 30px">
-  <div class="section-head reveal">
-    <div class="eyebrow center-eyebrow">Related screens</div>
-    <h2>Screens around Focus.</h2>
-  </div>
-</section>
-<div class="strip get-3d">
-  <div class="reveal-zoom"><div class="phone"><div data-screen="focus"></div></div><div class="cap">Focus timer</div></div>
-  <div class="reveal-zoom reveal-d1"><div class="phone"><div data-screen="analytics"></div></div><div class="cap">Session insights</div></div>
-  <div class="reveal-zoom reveal-d2"><div class="phone"><div data-screen="habits"></div></div><div class="cap">Streaks</div></div>
-  <div class="reveal-zoom"><div class="phone"><div data-screen="palette"></div></div><div class="cap">⌘K palette</div></div>
-  <div class="reveal-zoom reveal-d1"><div class="phone"><img class="shot-img" src="assets/focus.png" alt="Focus screen" loading="lazy" decoding="async" style="border-radius:30px"></div><div class="cap">Real screenshot</div></div>
-</div>
-
-<!-- ═══ VIDEO WALKTHROUGH ═══ -->
-<section class="video-hero">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="eyebrow center-eyebrow">Video walkthrough</div>
-      <h2>Watch a focus session<br>come to life.</h2>
-      <p>60-second guided tour — from the timer to Deep Lock, straight from the app.</p>
-    </div>
-    <div class="video-frame reveal-zoom" role="button" tabindex="0" aria-label="Play the app walkthrough">
-      <div class="video-screen">
-        <div class="video-scan" aria-hidden="true"></div>
-        <div class="video-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <div class="video-dur">▶ 1:00 · GUIDED TOUR</div>
-        <div class="vd-phone"><div class="phone" style="--pglow:rgba(138,99,245,.6)"><div data-screen="focus"></div></div></div>
-        <div class="vd-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4.5v15l13-7.5z"/></svg></div>
       </div>
     </div>
-    <div class="video-cap">Click the frame — <b>opens the full guided tour</b></div>
-  </div>
-</section>
+  </section>
 
-<div class="container" style="padding:30px 0 0"><div class="sect-wave" aria-hidden="true"></div></div>
+  <!-- ═══ features ═══ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Inside a session</p>
+        <h2>Everything stays <span class="serif">out of the way.</span></h2>
+        <p>One screen, one job. The details are there when you want them and gone when you don't.</p>
+      </div>
+      <div class="features">
+        <div class="feature reveal">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg></div>
+          <h3>Timestamp timer</h3>
+          <p>A real end time, not a tick count. The leftover minutes are always accurate, even after the app is killed.</p>
+          <span class="tag">Zero drift</span>
+        </div>
+        <div class="feature accent reveal" data-delay="1">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></div>
+          <h3>Deep Lock shield</h3>
+          <p>Pick the apps that pull you away. During a session the shield detects exits and brings you straight back.</p>
+          <span class="tag">Optional · permission-based</span>
+        </div>
+        <div class="feature warm reveal" data-delay="2">
+          <div class="ic"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg></div>
+          <h3>Ambient session cards</h3>
+          <p>A quiet ring, today's stats and a quote that changes with the session. Nothing to fiddle with.</p>
+          <span class="tag">Calm by default</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- ═══ CTA ═══ -->
-<section class="cta">
-  <div class="cta-glow"></div>
-  <div class="cta-content reveal">
-    <div class="eyebrow center-eyebrow">Ready?</div>
-    <h2>Start a session.<br><span class="grad">Breathe with the knot.</span></h2>
-    <div class="btn-row" style="justify-content:center">
-      <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.jainam.studentos" target="_blank" rel="noopener">Get on Google Play</a>
-      <a class="btn btn-ghost" href="tasks.html">Next: Tasks →</a>
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-wrap">
+    <div class="wrap">
+      <div class="cta-card reveal">
+        <p class="eyebrow">Ready?</p>
+        <h2>Start a session.<br><span class="serif">Let the phone go quiet.</span></h2>
+        <div class="btn-row">
+          <a class="btn light" href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Get on Google Play</a>
+          <a class="btn ghost" href="tasks.html">Next: Tasks →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a class="foot-brand" href="index.html">
+          <svg class="brand-mark" viewBox="0 0 180 180" aria-hidden="true"><path fill="currentColor" d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"/><path fill="currentColor" d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"/></svg>
+          <span>Student OS</span>
+        </a>
+        <p class="foot-note">Plan the day, lock in your focus and keep your streak. Free on Android, no account, no ads.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="focus.html">Focus</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="habits.html">Habits</a>
+        <a href="planner.html">Planner</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Student OS · MIT licensed</span>
+      <span><a href="https://github.com/jainam6610/student-os">Source</a> · <a href="https://play.google.com/store/apps/details?id=com.jainam.studentos">Google Play</a></span>
     </div>
   </div>
-</section>
+</footer>
 
-</div><!-- /page -->
-
-<div class="vignette" aria-hidden="true"></div>
-<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
-<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-<script src="assets/main.js" defer></script>
+<button class="back-top" id="backTop" type="button" aria-label="Back to top">↑</button>
+<script src="assets/site.js" defer></script>
 </body>
 </html>

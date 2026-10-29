@@ -1,20 +1,35 @@
 # Student OS — Landing Page
 
-A single-page, animation-rich marketing site for **Student OS**, hosted on GitHub Pages.
+A multi-page marketing site for **Student OS**, a free Android study app. Static HTML, CSS and vanilla JS — no build step.
 
 🔗 **Live:** https://jainam662010-boop.github.io/student-os-landing/
 
-## What's inside
+## Pages
 
-- `index.html` — the entire landing page (self-contained HTML + CSS + vanilla JS, no build step)
-- `assets/` — app icon and screenshots
-- `.nojekyll` — tells GitHub Pages to serve files as-is
+| Page | What it covers |
+| --- | --- |
+| `index.html` | Scroll-story landing: 3D tunnel hero, real-screenshot gallery, hoverable module strip, editorial sections |
+| `focus.html` | Timestamp focus timer demo, Deep Lock shield |
+| `tasks.html` | List and kanban views, priorities, XP |
+| `habits.html` | Interactive streak grid and consistency stats |
+| `planner.html` | Month/week/day views, exam countdowns, colour-coded blocks |
+| `analytics.html` | Focus trends, subject split, insight cards |
+| `privacy.html` | Data table, Deep Lock explanation, FAQ |
 
-## Animations
+## Structure
 
-Aurora gradient background, drifting particles, custom cursor + glow, scroll-progress bar, split-text hero reveal, rotating headline word, live focus timer, count-up stats, infinite marquee, scroll-driven 3D phone scenes, tilt/spotlight feature cards, scroll-reveal sections, animated accordion and a floating back-to-top button.
+```
+assets/
+  site.css      shared light theme, nav, footer, subpage components
+  site.js       nav, mobile menu, reveals, FAQ, habit + timer demos
+  skiper6.js    hoverable module strip used on the landing page
+  gallery/      real Android screenshots (WebP)
+  icon.svg      app icon
+```
 
-All motion respects `prefers-reduced-motion`.
+The landing page keeps its scroll-story CSS inline; everything shared lives in `site.css`. The old dark-theme `styles.css` and `main.js` are no longer linked and are kept only as reference.
+
+All motion respects `prefers-reduced-motion`, and every page works without JavaScript except the live demos.
 
 ## Local preview
 
@@ -36,5 +51,6 @@ This repo is served directly by GitHub Pages from the `main` branch (root). Push
 - App: https://play.google.com/store/apps/details?id=com.jainam.studentos
 - Source: https://github.com/jainam6610/student-os
 - Releases (APK): https://github.com/jainam6610/student-os/releases/latest
+- Privacy policy: https://studentos-privacy-hub.lovable.app
 
 MIT licensed.
