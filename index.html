@@ -147,15 +147,9 @@ footer{border-top:1px solid rgba(20,19,28,.12);padding:26px 24px calc(30px + env
  .gal-view{height:min(46vh,340px);height:min(46svh,340px)}
 }
 @media(prefers-reduced-motion:reduce){
- html{scroll-behavior:auto}.hero{height:100vh;height:100svh}.hint{display:none}#c2{display:none}
- .gal{height:auto;background:var(--paper)}
- .gal-pin{position:static;height:auto;overflow:visible;padding:76px 0 24px}
- .gal-view{perspective:none;height:auto;margin-top:32px}
- .gal-view::after{display:none}
- .gal-track{position:static;display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;padding:6px 24px 20px;scroll-snap-type:x mandatory;scrollbar-width:none;will-change:auto}
- .gal-track::-webkit-scrollbar{display:none}
- .gcard{position:relative;left:auto;top:auto;flex:0 0 auto;height:min(54svh,420px);transform:none!important;scroll-snap-align:center;will-change:auto}
- .gal-foot{display:none}
+ html{scroll-behavior:auto}.hint{display:none}
+ /* Scroll-driven motion stays available: it only moves while the user scrolls. */
+ .gcard{transition:none}
 }
 </style>
 <link rel="stylesheet" href="assets/site.css">
@@ -440,15 +434,15 @@ function frame(){
  render();
  if(running)raf=requestAnimationFrame(frame);
 }
-function start(){if(running||mq.matches||!onScreen||document.hidden)return;running=true;raf=requestAnimationFrame(frame)}
+function start(){if(running||!onScreen||document.hidden)return;running=true;raf=requestAnimationFrame(frame)}
 function stop(){running=false;cancelAnimationFrame(raf)}
 function staticFrame(){cur=0;tgt=0;cmx=0;cmy=0;render()}
 function sync(){
- if(mq.matches){stop();staticFrame()}
- else{tgt=cur=prog();start()}
+ if(mq.matches){mx=my=cmx=cmy=0}
+ tgt=cur=prog();start()
 }
 addEventListener('scroll',function(){tgt=prog()},{passive:true});
-addEventListener('pointermove',function(e){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5},{passive:true});
+addEventListener('pointermove',function(e){if(mq.matches)return;mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5},{passive:true});
 document.addEventListener('visibilitychange',function(){document.hidden?stop():start()});
 if('IntersectionObserver' in window){
  new IntersectionObserver(function(es){var v=es[0].isIntersecting;if(v&&!onScreen){cur=tgt=prog()}onScreen=v;onScreen?start():stop()},{threshold:0}).observe(hero);
@@ -528,25 +522,20 @@ function frame(){
  paint();
  if(running)raf=requestAnimationFrame(frame);
 }
-function start(){if(running||reduce||!onScreen||document.hidden)return;running=true;raf=requestAnimationFrame(frame)}
+function start(){if(running||!onScreen||document.hidden)return;running=true;raf=requestAnimationFrame(frame)}
 function stop(){running=false;cancelAnimationFrame(raf)}
 function sync(){
- if(mq.matches){
-  reduce=true;stop();
-  target=cur=0;mx=my=cmx=cmy=0;
-  resetMotion();nearCard();
- }else{
-  reduce=false;target=cur=prog();start();
- }
+ reduce=mq.matches;
+ if(reduce){mx=my=cmx=cmy=0}
+ target=cur=prog();start();
 }
-addEventListener('scroll',function(){if(!reduce)target=prog()},{passive:true});
+addEventListener('scroll',function(){target=prog()},{passive:true});
 addEventListener('pointermove',function(e){
  if(reduce||e.pointerType==='touch')return;
  mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;
  start();
 },{passive:true});
 addEventListener('resize',function(){
- if(reduce){nearCard();return}
  if(!running){target=cur=prog();paint()}
 },{passive:true});
 track.addEventListener('scroll',function(){
