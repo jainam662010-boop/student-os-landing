@@ -80,7 +80,7 @@ p{margin:0}
   display:flex;align-items:center;gap:8px;font-weight:700;
   letter-spacing:-.02em;text-decoration:none;font-size:14.5px;
 }
-.nav .brand .brand-mark{width:19px;height:19px;color:#b9b9ff}
+.nav .brand .brand-mark{width:21px;height:21px;flex:0 0 auto;color:#b9b9ff}
 .nav-links{display:flex;align-items:center;gap:18px}
 .nav-links a{
   position:relative;text-decoration:none;color:rgba(255,255,255,.7);
