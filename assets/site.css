@@ -148,6 +148,7 @@ body.menu-open{overflow:hidden}
 .btn-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 
 /* ── page chrome ───────────────────────────────────────────── */
+section[id],main[id],header[id]{scroll-margin-top:calc(88px + env(safe-area-inset-top,0px))}
 .page-progress{position:fixed;inset:0 0 auto;height:3px;z-index:70;pointer-events:none}
 .page-progress i{
   display:block;height:100%;width:0;
@@ -184,6 +185,7 @@ body.menu-open{overflow:hidden}
 .section-head .serif{color:var(--indigo)}
 
 .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,76px);align-items:center}
+.split>*,.hero-grid>*{min-width:0}
 .split.reverse .visual{order:-1}
 .split-copy h2{font-size:clamp(30px,4vw,52px);line-height:1.02;letter-spacing:-.045em;margin:0 0 18px}
 .split-copy p{color:var(--ink-soft);font-size:16.5px;line-height:1.65;max-width:36em}
@@ -689,4 +691,24 @@ body.menu-open{overflow:hidden}
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
   .reveal{opacity:1;transform:none}
   .bars i{animation:none}
+}
+
+/* ── disable hover on touch devices to prevent sticky states ── */
+@media (hover: none) and (pointer: coarse) {
+  .nav .go:hover,
+  .btn:hover,
+  .btn.light:hover,
+  .phone-frame.tilt:hover,
+  .feature:hover,
+  .habit-grid button:hover,
+  .oss-links a:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .btn.ghost:hover,
+  .cta-card .btn.ghost:hover {
+    transform: none;
+    box-shadow: none;
+    text-decoration: none;
+  }
 }

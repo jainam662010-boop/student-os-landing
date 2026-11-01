@@ -10,6 +10,8 @@
 
   var RED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var FINE = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  var isMobile = innerWidth <= 1000;
+  var isTouch = window.matchMedia('(pointer:coarse)').matches;
 
   function hexToRgba(hex, a) {
     var h = (hex || '').trim().replace('#', '');
@@ -72,7 +74,7 @@
       if (!el) return;
       cancelAnims(el);
       el.classList.add('is-on');
-      if (RED) return;
+      if (RED || isMobile || isTouch) return;
       letters(el).forEach(function (l, i) {
         l.animate(
           [
@@ -91,7 +93,7 @@
 
     function animateOut(el) {
       if (!el) return;
-      if (RED) { el.classList.remove('is-on'); return; }
+      if (RED || isMobile || isTouch) { el.classList.remove('is-on'); return; }
       var key = el.getAttribute('data-name');
       letters(el).forEach(function (l, i) {
         l.animate(
@@ -170,13 +172,13 @@
         card.setAttribute('aria-label', label.textContent + ' — ' + (card.getAttribute('data-role') || ''));
       }
       card.addEventListener('pointerenter', function (e) {
-        if (e.pointerType === 'touch') return;
+        if (e.pointerType === 'touch' || isMobile || isTouch) return;
         activate(card);
       });
       card.addEventListener('focus', function () { activate(card); });
       card.addEventListener('click', function (e) {
         // mouse users already preview on hover — let the link follow through
-        if (FINE && !touchMode) return;
+        if (FINE && !touchMode && !isMobile && !isTouch) return;
         // touch: first tap previews the module, second tap opens it
         if (activeCard === card) return;
         e.preventDefault();
@@ -189,7 +191,7 @@
     });
 
     row.addEventListener('pointerleave', function (e) {
-      if (e.pointerType === 'touch') return;
+      if (e.pointerType === 'touch' || isMobile || isTouch) return;
       if (row.contains(document.activeElement)) return;
       activate(null);
     });
@@ -209,7 +211,7 @@
     });
 
     /* ── cursor orb ─────────────────────────────────────── */
-    if (follow && FINE && !RED) {
+    if (follow && FINE && !RED && !isMobile && !isTouch) {
       var fx = 0, fy = 0, tx = 0, ty = 0, raf = null;
 
       var tick = function () {
@@ -248,7 +250,7 @@
     }
 
     /* ── first paint ────────────────────────────────────── */
-    if (RED) root.classList.add('is-static');
+    if (RED || isMobile || isTouch) root.classList.add('is-static');
     setMeta(null);
     nameEls.default && nameEls.default.classList.add('is-on');
     animateIn(nameEls.default, 320);
