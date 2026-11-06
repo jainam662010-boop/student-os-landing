@@ -84,8 +84,15 @@
       var doc = document.documentElement;
       var max = doc.scrollHeight - window.innerHeight;
       var y = window.pageYOffset || doc.scrollTop || 0;
-      if (bar) bar.style.width = (max > 0 ? Math.min(100, (y / max) * 100) : 0) + '%';
-      if (top) top.classList.toggle('show', y > 640);
+      if (bar) {
+        var p = max > 0 ? Math.min(1, y / max) : 0;
+        var t = 'scaleX(' + p.toFixed(4) + ')';
+        if (bar.__t !== t) { bar.__t = t; bar.style.transform = t; }
+      }
+      if (top) {
+        var show = y > 640;
+        if (top.__s !== show) { top.__s = show; top.classList.toggle('show', show); }
+      }
     };
     window.addEventListener('scroll', function () {
       if (!ticking) { ticking = true; window.requestAnimationFrame(update); }

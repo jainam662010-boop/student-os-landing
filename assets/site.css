@@ -151,9 +151,9 @@ body.menu-open{overflow:hidden}
 section[id],main[id],header[id]{scroll-margin-top:calc(88px + env(safe-area-inset-top,0px))}
 .page-progress{position:fixed;inset:0 0 auto;height:3px;z-index:70;pointer-events:none}
 .page-progress i{
-  display:block;height:100%;width:0;
+  display:block;height:100%;width:100%;
   background:linear-gradient(90deg,var(--indigo),var(--violet) 55%,var(--rose));
-  transition:width .1s linear;
+  transform:scaleX(0);transform-origin:0 50%;will-change:transform;
 }
 .back-top{
   position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));

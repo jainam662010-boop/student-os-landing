@@ -8,7 +8,7 @@ A multi-page marketing site for **Student OS**, a free Android study app. Static
 
 | Page | What it covers |
 | --- | --- |
-| `index.html` | Scroll-story landing: 3D tunnel hero, real-screenshot gallery, hoverable module strip, editorial sections |
+| `index.html` | Scroll-story landing: 3D tunnel hero, real-screenshot gallery, scroll-assemble moment, hoverable module strip, editorial sections |
 | `focus.html` | Timestamp focus timer demo, Deep Lock shield |
 | `tasks.html` | List and kanban views, priorities, XP |
 | `habits.html` | Interactive streak grid and consistency stats |
@@ -23,6 +23,11 @@ assets/
   site.css      shared light theme, nav, footer, subpage components
   site.js       nav, mobile menu, reveals, FAQ, habit + timer demos
   skiper6.js    hoverable module strip used on the landing page
+  skiper31.js   scroll-assemble section ("Less switching. More studying.")
+  skiper58.js   text-roll index nav ("Every part of the app, one hover away.")
+  sticky-cards.js scroll-driven sticky screenshot stack (Skiper17 / StickyCard002 port)
+  showreel.js   click-to-play screenshot tour in a dialog player
+  smooth.js     Lenis-style inertial wheel scrolling (fine pointers, reduced-motion aware)
   gallery/      real Android screenshots (WebP)
   icon.svg      app icon
 ```
