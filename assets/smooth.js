@@ -26,6 +26,7 @@
   var written = -1;  // last position we wrote (to recognise own scroll events)
   var vel = 0;       // smoothed gesture velocity
   var lastWheel = 0;
+  var scrollHandlerScheduled = false; // guard against double-fire
 
   function maxY() {
     return Math.max(0, document.documentElement.scrollHeight - innerHeight);
@@ -106,14 +107,19 @@
 
   /* ── external scroll (scrollbar, keyboard, anchors): sync ── */
   addEventListener('scroll', function () {
-    var y = scrollY;
-    if (written >= 0 && Math.abs(y - written) < 1.5) {
-      written = -1; /* our own write landed — ignore */
-      return;
-    }
-    target = clamp(y);
-    vel = 0;
-    written = -1;
+    if (scrollHandlerScheduled) return; // prevent double-fire
+    scrollHandlerScheduled = true;
+    requestAnimationFrame(function () {
+      scrollHandlerScheduled = false;
+      var y = scrollY;
+      if (written >= 0 && Math.abs(y - written) < 1.5) {
+        written = -1; /* our own write landed — ignore */
+        return;
+      }
+      target = clamp(y);
+      vel = 0;
+      written = -1;
+    });
   }, { passive: true });
 
   document.addEventListener('visibilitychange', function () {
